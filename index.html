@@ -7,13 +7,11 @@
   <style>
     :root{
       --bg:#0f1115;
-      --panel:#151a24;
       --stroke:rgba(255,255,255,.10);
       --text:#e8ecf6;
       --muted:rgba(232,236,246,.62);
       --brand:#7aa2ff;
       --bad:#ff5b6b;
-      --good:#44d07b;
       --r:18px;
     }
     *{box-sizing:border-box}
@@ -24,34 +22,29 @@
       background:var(--bg);
       color:var(--text);
     }
-    .wrap{max-width:980px;margin:0 auto;padding:14px 12px 64px}
+    .wrap{max-width:980px;margin:0 auto;padding:12px 12px 64px}
     .top{
       display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:12px;border:1px solid var(--stroke);border-radius:var(--r);
+      padding:10px 12px;border:1px solid var(--stroke);border-radius:var(--r);
       background:rgba(255,255,255,.03);
     }
-    .top b{font-size:15px}
-    .top small{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+    .top b{font-size:13px}
+    .top small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
     .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-    .pill{
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.03);
-      border-radius:999px;
-      padding:8px 10px;
-      font-size:12px;
-      color:var(--muted);
-      display:flex;gap:8px;align-items:center;
-    }
-    .pill select,.pill input{
-      width:auto;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid var(--stroke);
-      background:rgba(0,0,0,.25);
+    .btn{
+      border:1px solid rgba(122,162,255,.45);
+      background:rgba(122,162,255,.16);
       color:var(--text);
-      font-size:16px; /* evita zoom iPhone */
-      line-height:1.2;
+      padding:9px 11px;
+      border-radius:14px;
+      font-weight:900;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
     }
+    .btn.ghost{border-color:var(--stroke);background:rgba(255,255,255,.03)}
+    .btn.bad{border-color:rgba(255,91,107,.45);background:rgba(255,91,107,.14)}
+    .btn:active{transform:scale(.99)}
 
     .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
     .tab{
@@ -65,6 +58,7 @@
       cursor:pointer;
     }
     .tab.active{border-color:rgba(122,162,255,.45);background:rgba(122,162,255,.14)}
+
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
     @media(max-width:900px){ .grid{grid-template-columns:1fr} }
 
@@ -75,8 +69,8 @@
       padding:12px;
     }
     h2{margin:0 0 10px;font-size:13px;color:var(--muted);letter-spacing:.2px}
-
     label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+
     input,select{
       width:100%;
       padding:11px 12px;
@@ -91,31 +85,7 @@
     .row{display:flex;gap:10px;flex-wrap:wrap}
     .field{flex:1;min-width:170px}
     .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .btn{
-      border:1px solid rgba(122,162,255,.45);
-      background:rgba(122,162,255,.16);
-      color:var(--text);
-      padding:10px 12px;
-      border-radius:14px;
-      font-weight:900;
-      font-size:13px;
-      cursor:pointer;
-    }
-    .btn.ghost{border-color:var(--stroke);background:rgba(255,255,255,.03)}
-    .btn.bad{border-color:rgba(255,91,107,.45);background:rgba(255,91,107,.14)}
-    .btn:active{transform:scale(.99)}
-
     .sep{height:1px;background:var(--stroke);margin:12px 0}
-
-    .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .kpi{
-      border:1px solid var(--stroke);
-      border-radius:14px;
-      padding:10px;
-      background:rgba(255,255,255,.02);
-    }
-    .kpi span{display:block;color:var(--muted);font-size:12px}
-    .kpi b{display:block;margin-top:4px;font-size:16px;font-variant-numeric:tabular-nums}
 
     .list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
     .item{
@@ -137,32 +107,30 @@
       white-space:nowrap;
     }
 
-    table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0 8px;
+    .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .kpi{
+      border:1px solid var(--stroke);
+      border-radius:14px;
+      padding:10px;
+      background:rgba(255,255,255,.02);
     }
-    th{
-      text-align:left;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
-      padding:0 6px 6px;
-    }
+    .kpi span{display:block;color:var(--muted);font-size:12px}
+    .kpi b{display:block;margin-top:4px;font-size:16px;font-variant-numeric:tabular-nums}
+
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    th{ text-align:left;font-size:12px;color:var(--muted);font-weight:900;padding:0 6px 6px}
     td{
       background:rgba(255,255,255,.02);
       border:1px solid var(--stroke);
       padding:10px;
       border-right:none;
+      vertical-align:middle;
     }
     tr td:first-child{border-top-left-radius:14px;border-bottom-left-radius:14px}
     tr td:last-child{border-right:1px solid var(--stroke);border-top-right-radius:14px;border-bottom-right-radius:14px}
     .td-actions{white-space:nowrap}
-    .mini{
-      font-size:12px;color:var(--muted)
-    }
+    .mini{color:var(--muted);font-size:12px;line-height:1.35}
     .mono{font-variant-numeric:tabular-nums}
-    .hint{color:var(--muted);font-size:12px;line-height:1.35;margin-top:8px}
   </style>
 </head>
 
@@ -170,18 +138,10 @@
 <div class="wrap">
   <div class="top">
     <div>
-      <b>Stella Maris · Recetas</b>
-      <small>Insumos (cargás SIN IVA) → receta usa CON IVA automáticamente</small>
+      <b>Recetas</b>
+      <small>Nombre · Insumo · Cantidad · Rinde · Costo · Venta · Margen</small>
     </div>
     <div class="right">
-      <div class="pill">
-        IVA
-        <select id="ivaRate">
-          <option value="0.21">21%</option>
-          <option value="0.105">10,5%</option>
-          <option value="0">0%</option>
-        </select>
-      </div>
       <button class="btn ghost" id="btnBackup">Exportar</button>
       <button class="btn ghost" id="btnRestore">Importar</button>
     </div>
@@ -196,53 +156,39 @@
   <!-- ARMAR -->
   <div id="view-armar" class="grid">
     <div class="card">
-      <h2>Armar receta (simple)</h2>
+      <h2>Armar receta</h2>
 
+      <!-- 1) Nombre de receta -->
       <div class="row">
         <div class="field">
           <label>Nombre de receta</label>
           <input id="rName" placeholder="Ej: Salsa de verdeo / Paella / Tarta" />
         </div>
-        <div class="field">
-          <label>Rinde (opcional)</label>
-          <div class="row" style="gap:8px">
-            <div class="field" style="min-width:140px">
-              <input id="rYieldQty" type="number" step="0.01" min="0.01" value="1" />
-            </div>
-            <div class="field" style="min-width:140px">
-              <select id="rYieldUnit">
-                <option value="kg">kg</option>
-                <option value="u">unidad</option>
-              </select>
-            </div>
-          </div>
-          <div class="hint">Si no querés pensar: dejalo en 1 unidad.</div>
-        </div>
       </div>
 
       <div class="sep"></div>
 
+      <!-- 2) Insumo -->
       <div class="row">
         <div class="field">
           <label>Insumo</label>
           <select id="pickIng"></select>
         </div>
+      </div>
+
+      <!-- 3) Cantidad -->
+      <div class="row">
         <div class="field">
           <label>Cantidad</label>
-          <input id="lineQty" type="number" step="0.01" min="0" placeholder="Ej: 0,5 (medio kg) / 2 (unidades)" />
-        </div>
-        <div class="field">
-          <label>Unidad</label>
-          <select id="lineUnit">
-            <option value="kg">kg</option>
-            <option value="u">unidad</option>
-          </select>
+          <input id="lineQty" type="number" inputmode="decimal" step="0.01" min="0"
+                 placeholder="Ej: 0,5 o 2" />
+          <div class="mini" id="unitHint" style="margin-top:6px"></div>
         </div>
       </div>
 
       <div class="btnrow">
         <button class="btn" id="btnAddLine">Agregar</button>
-        <button class="btn ghost" id="btnNewRecipe">Nueva</button>
+        <button class="btn ghost" id="btnNew">Nueva receta</button>
         <button class="btn bad" id="btnClearDraft">Borrar borrador</button>
       </div>
 
@@ -250,45 +196,72 @@
 
       <div class="sep"></div>
 
+      <!-- 4) Rinde / unidad o kg -->
+      <div class="row">
+        <div class="field" style="min-width:160px">
+          <label>Rinde</label>
+          <input id="rYieldQty" type="number" inputmode="decimal" step="0.01" min="0.01" value="1" />
+        </div>
+        <div class="field" style="min-width:160px">
+          <label>Unidad</label>
+          <select id="rYieldUnit">
+            <option value="kg">kg</option>
+            <option value="u">unidad</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <!-- 5) Costo (solo lectura, calculado) -->
       <div class="row">
         <div class="field">
-          <label>Precio a vender (por rinde)</label>
-          <input id="rSellPrice" type="number" step="0.01" min="0" placeholder="Ej: precio por kg o por unidad" />
+          <label>Costo (calculado)</label>
+          <input id="costReadonly" readonly />
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <!-- 6) Precio venta -->
+      <div class="row">
+        <div class="field">
+          <label>Precio venta (por rinde)</label>
+          <input id="rSellPrice" type="number" inputmode="decimal" step="0.01" min="0"
+                 placeholder="Ej: precio por kg o por unidad" />
         </div>
       </div>
 
       <div class="btnrow">
-        <button class="btn" id="btnSaveRecipe">Guardar receta</button>
+        <button class="btn" id="btnSaveRecipe">Confirmar receta</button>
         <button class="btn bad" id="btnDeleteRecipe" style="display:none">Borrar receta</button>
       </div>
+
+      <div class="mini">Al confirmar: se guarda y se limpia para cargar otra.</div>
     </div>
 
+    <!-- 7) Margen + resumen -->
     <div class="card">
-      <h2>Cálculos</h2>
+      <h2>Resumen</h2>
       <div class="kpis">
-        <div class="kpi"><span>Costo total (CON IVA)</span><b id="kTotal">$0</b></div>
+        <div class="kpi"><span>Costo total</span><b id="kTotal">$0</b></div>
         <div class="kpi"><span>Costo por rinde</span><b id="kPer">$0</b></div>
-        <div class="kpi"><span>Tu precio</span><b id="kSell">$0</b></div>
+        <div class="kpi"><span>Precio venta</span><b id="kSell">$0</b></div>
         <div class="kpi"><span>Margen</span><b id="kMargin">$0</b></div>
       </div>
-
       <div class="sep"></div>
-      <div class="mini">
-        ✔ Insumos: cargás SIN IVA<br/>
-        ✔ Receta: usa CON IVA (automático con la tasa de arriba)
-      </div>
+      <div class="mini">Nota: el costo usa el precio del insumo tal como lo cargaste (tu base).</div>
     </div>
   </div>
 
   <!-- INSUMOS -->
   <div id="view-insumos" class="grid" style="display:none">
     <div class="card">
-      <h2>Insumos (editable)</h2>
-
+      <h2>Agregar insumo</h2>
       <div class="row">
         <div class="field">
           <label>Nombre</label>
-          <input id="ingName" placeholder="Ej: Salmón, Harina, Envase" />
+          <input id="ingName" placeholder="Ej: Merluza, Harina, Envase" />
         </div>
         <div class="field">
           <label>Unidad</label>
@@ -298,30 +271,26 @@
           </select>
         </div>
         <div class="field">
-          <label>Precio SIN IVA (por unidad)</label>
-          <input id="ingPriceNo" type="number" step="0.01" min="0" placeholder="Ej: 18000 (kg) / 300 (u)" />
+          <label>Precio (por unidad)</label>
+          <input id="ingPrice" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Ej: 18000 / 300" />
         </div>
       </div>
-
       <div class="btnrow">
         <button class="btn" id="btnSaveIng">Guardar</button>
         <button class="btn ghost" id="btnClearIng">Limpiar</button>
       </div>
-
-      <div class="hint">El precio CON IVA se calcula solo y se usa en las recetas.</div>
+      <div class="mini">Tip: mantenelo simple: kg o unidad y precio por esa unidad.</div>
     </div>
 
     <div class="card">
       <h2>Hoja de insumos</h2>
-      <div class="mini" style="margin-bottom:8px">Editá / Borrá desde acá.</div>
       <div style="overflow:auto">
         <table>
           <thead>
             <tr>
               <th>Nombre</th>
               <th>Unidad</th>
-              <th>SIN IVA</th>
-              <th>CON IVA</th>
+              <th>Precio</th>
               <th></th>
             </tr>
           </thead>
@@ -334,7 +303,7 @@
   <!-- RECETAS -->
   <div id="view-recetas" class="grid" style="display:none">
     <div class="card">
-      <h2>Lista de recetas (editable)</h2>
+      <h2>Lista de recetas</h2>
       <div class="row">
         <div class="field">
           <label>Buscar</label>
@@ -346,26 +315,25 @@
 
     <div class="card">
       <h2>Detalle</h2>
-      <div id="detail" class="hint">Elegí una receta.</div>
+      <div id="detail" class="mini">Elegí una receta.</div>
     </div>
   </div>
 </div>
 
 <script>
-  const LS = "sm_recetas_simple_v1";
+  const LS = "sm_recetas_orden_v1";
   const state = load();
 
   function load(){
     try{
       const raw = localStorage.getItem(LS);
-      if(!raw) return { ivaRate:0.21, ingredients:[], recipes:[] };
+      if(!raw) return { ingredients:[], recipes:[] };
       const s = JSON.parse(raw);
-      if(typeof s.ivaRate !== "number") s.ivaRate = 0.21;
-      if(!Array.isArray(s.ingredients)) s.ingredients = [];
-      if(!Array.isArray(s.recipes)) s.recipes = [];
+      if(!Array.isArray(s.ingredients)) s.ingredients=[];
+      if(!Array.isArray(s.recipes)) s.recipes=[];
       return s;
     }catch{
-      return { ivaRate:0.21, ingredients:[], recipes:[] };
+      return { ingredients:[], recipes:[] };
     }
   }
   function save(){ localStorage.setItem(LS, JSON.stringify(state)); renderAll(); }
@@ -375,8 +343,6 @@
   function money(n){ return fmt.format(Number.isFinite(n)?n:0); }
   function num(v){ const x=parseFloat(String(v).replace(",", ".")); return Number.isFinite(x)?x:0; }
   function esc(s){ return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
-
-  function priceWithIVA(noIVA){ return noIVA * (1 + state.ivaRate); }
 
   function findIng(id){ return state.ingredients.find(x=>x.id===id); }
   function findRec(id){ return state.recipes.find(x=>x.id===id); }
@@ -395,25 +361,17 @@
     });
   });
 
-  // IVA rate
-  const ivaSel = document.getElementById("ivaRate");
-  ivaSel.value = String(state.ivaRate);
-  ivaSel.addEventListener("change", ()=>{
-    state.ivaRate = num(ivaSel.value);
-    save();
-  });
-
   /** ========= INSUMOS ========= */
   let editingIngId = null;
 
   document.getElementById("btnSaveIng").addEventListener("click", ()=>{
     const name = document.getElementById("ingName").value.trim();
     const unit = document.getElementById("ingUnit").value;
-    const priceNo = num(document.getElementById("ingPriceNo").value);
+    const price = num(document.getElementById("ingPrice").value);
     if(!name) return alert("Poné nombre.");
-    if(priceNo<=0) return alert("Precio SIN IVA debe ser > 0.");
+    if(price<=0) return alert("Precio debe ser > 0.");
 
-    const obj = { id: editingIngId || uid(), name, unit, priceNo };
+    const obj = { id: editingIngId || uid(), name, unit, price };
     if(editingIngId){
       state.ingredients = state.ingredients.map(x=>x.id===editingIngId ? obj : x);
     }else{
@@ -429,24 +387,14 @@
     editingIngId = null;
     document.getElementById("ingName").value = "";
     document.getElementById("ingUnit").value = "kg";
-    document.getElementById("ingPriceNo").value = "";
+    document.getElementById("ingPrice").value = "";
     document.getElementById("btnSaveIng").textContent = "Guardar";
-  }
-
-  function loadIngToForm(id){
-    const ing=findIng(id);
-    if(!ing) return;
-    editingIngId = id;
-    document.getElementById("ingName").value = ing.name;
-    document.getElementById("ingUnit").value = ing.unit;
-    document.getElementById("ingPriceNo").value = ing.priceNo;
-    document.getElementById("btnSaveIng").textContent = "Guardar cambios";
-    document.querySelector('.tab[data-tab="insumos"]').click();
   }
 
   function renderIngTable(){
     const tb = document.getElementById("ingTable");
     tb.innerHTML = "";
+
     state.ingredients
       .slice()
       .sort((a,b)=>a.name.localeCompare(b.name,"es"))
@@ -455,14 +403,20 @@
         tr.innerHTML = `
           <td><b>${esc(ing.name)}</b></td>
           <td class="mono">${ing.unit==="kg"?"kg":"u"}</td>
-          <td class="mono">${money(ing.priceNo)}</td>
-          <td class="mono">${money(priceWithIVA(ing.priceNo))}</td>
+          <td class="mono">${money(ing.price)}</td>
           <td class="td-actions">
             <button class="btn ghost" data-act="edit">Editar</button>
             <button class="btn bad" data-act="del">Borrar</button>
           </td>
         `;
-        tr.querySelector('[data-act="edit"]').addEventListener("click", ()=>loadIngToForm(ing.id));
+        tr.querySelector('[data-act="edit"]').addEventListener("click", ()=>{
+          editingIngId = ing.id;
+          document.getElementById("ingName").value = ing.name;
+          document.getElementById("ingUnit").value = ing.unit;
+          document.getElementById("ingPrice").value = ing.price;
+          document.getElementById("btnSaveIng").textContent = "Guardar cambios";
+          document.querySelector('.tab[data-tab="insumos"]').click();
+        });
         tr.querySelector('[data-act="del"]').addEventListener("click", ()=>{
           const used = state.recipes.some(r=>r.lines.some(l=>l.ingId===ing.id));
           if(used) return alert("Ese insumo está usado en una receta. Borrá/edita la receta primero.");
@@ -483,6 +437,7 @@
       opt.value="";
       opt.textContent="Cargá insumos primero";
       pick.appendChild(opt);
+      document.getElementById("unitHint").textContent = "";
       return;
     }
     state.ingredients
@@ -491,10 +446,20 @@
       .forEach(ing=>{
         const opt=document.createElement("option");
         opt.value=ing.id;
-        opt.textContent = `${ing.name} · ${money(priceWithIVA(ing.priceNo))}/${ing.unit==="kg"?"kg":"u"} (CON IVA)`;
+        opt.textContent = `${ing.name} · ${money(ing.price)}/${ing.unit==="kg"?"kg":"u"}`;
         pick.appendChild(opt);
       });
+    updateUnitHint();
   }
+
+  function updateUnitHint(){
+    const ingId = document.getElementById("pickIng").value;
+    const ing = findIng(ingId);
+    document.getElementById("unitHint").textContent =
+      ing ? `Unidad del insumo: ${ing.unit==="kg"?"kg":"unidad"} (se usa esa)` : "";
+  }
+
+  document.getElementById("pickIng").addEventListener("change", updateUnitHint);
 
   /** ========= ARMAR RECETA ========= */
   let draft = emptyDraft();
@@ -515,7 +480,7 @@
     document.getElementById("rYieldUnit").value = draft.yieldUnit || "u";
     document.getElementById("rSellPrice").value = draft.sellPrice ? String(draft.sellPrice) : "";
     document.getElementById("lineQty").value = "";
-    document.getElementById("lineUnit").value = "kg";
+    document.getElementById("costReadonly").value = "";
   }
 
   function syncUIToDraft(){
@@ -530,7 +495,7 @@
     document.getElementById(id).addEventListener("change", ()=>{ syncUIToDraft(); renderDraft(); });
   });
 
-  document.getElementById("btnNewRecipe").addEventListener("click", resetDraft);
+  document.getElementById("btnNew").addEventListener("click", resetDraft);
   document.getElementById("btnClearDraft").addEventListener("click", ()=>{
     if(confirm("Borrar borrador?")) resetDraft();
   });
@@ -542,13 +507,8 @@
     if(!ing) return alert("Elegí un insumo válido.");
     const qty = num(document.getElementById("lineQty").value);
     if(qty<=0) return alert("Cantidad debe ser > 0.");
-    const unit = document.getElementById("lineUnit").value;
 
-    if(unit !== ing.unit){
-      return alert(`Ese insumo está en ${ing.unit==="kg"?"kg":"unidad"}. Cambiá la unidad.`);
-    }
-
-    draft.lines.push({ ingId, qty, unit });
+    draft.lines.push({ ingId, qty }); // unidad se deduce del insumo
     document.getElementById("lineQty").value="";
     renderDraft();
   });
@@ -558,8 +518,7 @@
     for(const l of r.lines){
       const ing=findIng(l.ingId);
       if(!ing) continue;
-      const unitPriceIVA = priceWithIVA(ing.priceNo);
-      total += unitPriceIVA * num(l.qty);
+      total += ing.price * num(l.qty);
     }
     return total;
   }
@@ -573,36 +532,38 @@
 
     const dl = document.getElementById("draftLines");
     dl.innerHTML="";
+
     draft.lines.forEach((l, idx)=>{
       const ing=findIng(l.ingId);
       const name = ing ? ing.name : "(insumo borrado)";
-      const unit = l.unit==="kg"?"kg":"u";
+      const unit = ing ? (ing.unit==="kg"?"kg":"u") : "";
+      const price = ing ? ing.price : 0;
+      const lineCost = price * num(l.qty);
+
       const el=document.createElement("div");
       el.className="item";
       el.innerHTML = `
         <div>
           <b>${esc(name)}</b>
-          <small class="mono">${l.qty.toFixed(2).replace(".",",")} ${unit}</small>
+          <small class="mono">${l.qty.toFixed(2).replace(".",",")} ${unit} · ${money(lineCost)}</small>
         </div>
         <div class="actions">
-          <button class="btn ghost" data-act="up">↑</button>
-          <button class="btn ghost" data-act="down">↓</button>
           <button class="btn bad" data-act="del">Borrar</button>
         </div>
       `;
       el.querySelector('[data-act="del"]').addEventListener("click", ()=>{ draft.lines.splice(idx,1); renderDraft(); });
-      el.querySelector('[data-act="up"]').addEventListener("click", ()=>swapLine(idx, idx-1));
-      el.querySelector('[data-act="down"]').addEventListener("click", ()=>swapLine(idx, idx+1));
       dl.appendChild(el);
     });
 
     syncUIToDraft();
+
     const total = recipeCostTotal(draft);
     const per = recipeCostPer(draft);
     const sell = num(draft.sellPrice);
     const margin = sell>0 ? (sell - per) : 0;
     const pct = sell>0 ? (margin/sell)*100 : 0;
 
+    document.getElementById("costReadonly").value = `${money(total)} total · ${money(per)} por rinde`;
     document.getElementById("kTotal").textContent = money(total);
     document.getElementById("kPer").textContent = money(per);
     document.getElementById("kSell").textContent = money(sell);
@@ -611,33 +572,20 @@
     document.getElementById("btnDeleteRecipe").style.display = draft.id ? "" : "none";
   }
 
-  function swapLine(i,j){
-    if(j<0 || j>=draft.lines.length) return;
-    const tmp=draft.lines[i];
-    draft.lines[i]=draft.lines[j];
-    draft.lines[j]=tmp;
-    renderDraft();
-  }
-
   document.getElementById("btnSaveRecipe").addEventListener("click", ()=>{
     syncUIToDraft();
     if(!draft.name) return alert("Poné nombre de receta.");
     if(draft.lines.length===0) return alert("Agregá al menos 1 insumo.");
 
     const obj = JSON.parse(JSON.stringify(draft));
-    obj.id = draft.id || uid();
-    obj.createdAt = obj.createdAt || Date.now();
+    obj.id = uid();
+    obj.createdAt = Date.now();
 
-    if(draft.id){
-      state.recipes = state.recipes.map(r=>r.id===draft.id ? obj : r);
-    }else{
-      state.recipes.push(obj);
-    }
+    state.recipes.push(obj);
     save();
-    draft = obj;
-    syncDraftToUI();
-    document.getElementById("btnDeleteRecipe").style.display="";
-    alert("Receta guardada.");
+
+    alert("Guardada ✅");
+    resetDraft(); // se vacía para cargar otra
   });
 
   document.getElementById("btnDeleteRecipe").addEventListener("click", ()=>{
@@ -679,12 +627,32 @@
           <button class="btn bad" data-act="del">Borrar</button>
         </div>
       `;
-      el.querySelector('[data-act="open"]').addEventListener("click", ()=>openRecipe(r.id));
+      el.querySelector('[data-act="open"]').addEventListener("click", ()=>{
+        // solo muestra detalle, NO carga el borrador (porque vos querés cargar rápido otra)
+        const lines = r.lines.map(l=>{
+          const ing=findIng(l.ingId);
+          const n = ing?ing.name:"(insumo)";
+          const unit = ing ? (ing.unit==="kg"?"kg":"u") : "";
+          return `• ${esc(n)} — ${l.qty.toFixed(2).replace(".",",")} ${unit}`;
+        }).join("<br>");
+
+        document.getElementById("detail").innerHTML = `
+          <div class="mini">
+            <b>${esc(r.name)}</b><br>
+            Rinde: <b class="mono">${r.yieldQty} ${r.yieldUnit==="kg"?"kg":"u"}</b><br><br>
+            Costo total: <b class="mono">${money(total)}</b><br>
+            Costo por rinde: <b class="mono">${money(per)}</b><br>
+            Venta: <b class="mono">${money(sell)}</b><br>
+            Margen: <b class="mono">${money(margin)}</b><br><br>
+            ${lines || "—"}
+          </div>
+        `;
+      });
       el.querySelector('[data-act="del"]').addEventListener("click", ()=>{
         if(confirm(`Borrar "${r.name}"?`)){
           state.recipes = state.recipes.filter(x=>x.id!==r.id);
           save();
-          document.getElementById("detail").innerHTML = "Elegí una receta.";
+          document.getElementById("detail").textContent = "Elegí una receta.";
         }
       });
       list.appendChild(el);
@@ -692,43 +660,10 @@
 
     if(arr.length===0){
       const e=document.createElement("div");
-      e.className="hint";
+      e.className="mini";
       e.textContent="No hay recetas todavía.";
       list.appendChild(e);
     }
-  }
-
-  function openRecipe(id){
-    const r=findRec(id);
-    if(!r) return;
-
-    draft = JSON.parse(JSON.stringify(r));
-    syncDraftToUI();
-    document.querySelector('.tab[data-tab="armar"]').click();
-
-    const lines = r.lines.map(l=>{
-      const ing=findIng(l.ingId);
-      const n = ing?ing.name:"(insumo)";
-      return `• ${esc(n)} — ${l.qty.toFixed(2).replace(".",",")} ${l.unit==="kg"?"kg":"u"}`;
-    }).join("<br>");
-
-    const total = recipeCostTotal(r);
-    const per = recipeCostPer(r);
-    const sell = num(r.sellPrice);
-    const margin = sell>0 ? (sell - per) : 0;
-
-    document.getElementById("detail").innerHTML = `
-      <div class="hint">
-        <b>${esc(r.name)}</b><br>
-        Rinde: <b class="mono">${r.yieldQty} ${r.yieldUnit==="kg"?"kg":"u"}</b><br><br>
-        Costo total (CON IVA): <b class="mono">${money(total)}</b><br>
-        Costo por rinde: <b class="mono">${money(per)}</b><br>
-        Precio a vender: <b class="mono">${money(sell)}</b><br>
-        Margen: <b class="mono">${money(margin)}</b><br><br>
-        ${lines || "—"}
-      </div>
-    `;
-    renderDraft();
   }
 
   /** ========= BACKUP / RESTORE ========= */
@@ -738,7 +673,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href=url;
-    a.download="stella-maris-recetas-backup.json";
+    a.download="recetas-backup.json";
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -756,10 +691,8 @@
         const txt=await f.text();
         const parsed=JSON.parse(txt);
         if(!parsed || typeof parsed!=="object") throw 0;
-        state.ivaRate = typeof parsed.ivaRate==="number" ? parsed.ivaRate : 0.21;
         state.ingredients = Array.isArray(parsed.ingredients) ? parsed.ingredients : [];
         state.recipes = Array.isArray(parsed.recipes) ? parsed.recipes : [];
-        ivaSel.value = String(state.ivaRate);
         save();
         alert("Importado OK.");
       }catch{
@@ -769,12 +702,12 @@
     input.click();
   });
 
-  /** ========= RENDER ALL ========= */
+  /** ========= RENDER ========= */
   function renderAll(){
     renderIngTable();
     buildPickIng();
-    renderRecipeList();
     renderDraft();
+    renderRecipeList();
   }
 
   renderAll();
