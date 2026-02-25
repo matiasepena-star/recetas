@@ -112,7 +112,6 @@
     .mini{color:var(--muted);font-size:12px;line-height:1.35}
     .mono{font-variant-numeric:tabular-nums}
 
-    /* Tablas compactas */
     table{width:100%;border-collapse:separate;border-spacing:0 6px}
     th{ text-align:left;font-size:12px;color:var(--muted);font-weight:900;padding:0 6px 6px}
     td{
@@ -126,7 +125,6 @@
     tr td:last-child{border-right:1px solid var(--stroke);border-top-right-radius:14px;border-bottom-right-radius:14px}
     .td-actions{white-space:nowrap}
 
-    /* Inputs de tabla (más visibles al editar) */
     .cell{
       width:100%;
       padding:9px 10px;
@@ -259,8 +257,7 @@
       </div>
     </div>
   </div>
-
-  <!-- ARMAR -->
+    <!-- ARMAR -->
   <div id="view-armar" class="grid" style="display:none">
     <div class="card">
       <h2>Armar receta</h2>
@@ -581,8 +578,7 @@
       tb.appendChild(tr);
     });
   }
-
-  /** ========= CATEGORÍAS ========= */
+    /** ========= CATEGORÍAS ========= */
   let draftCategory = "General";
   function ensureCategories(){
     if(!state.categories.includes("General")) state.categories.unshift("General");
@@ -804,4 +800,158 @@
     }
   });
 
-  document.getElementById("
+  document.getElementById("btnDeleteRecipe").addEventListener("click", ()=>{
+    if(!editingRecipeId) return;
+    const r = state.recipes.find(x=>x.id===editingRecipeId);
+    if(!r) return;
+    if(confirm(`Borrar "${r.name}"?`)){
+      state.recipes = state.recipes.filter(x=>x.id!==editingRecipeId);
+      save();
+      resetDraft();
+      document.getElementById("detail").textContent="Elegí una receta.";
+    }
+  });
+
+  /** ========= LISTA RECETAS ========= */
+  document.getElementById("search").addEventListener("input", renderRecipeList);
+
+  function renderRecipeList(){
+    const q = document.getElementById("search").value.trim().toLowerCase();
+    const cat = document.getElementById("catFilter").value || "Todas";
+    const box = document.getElementById("recipeList");
+    box.innerHTML = "";
+
+    const arr = state.recipes
+      .filter(r=>{
+        const okText = !q || (r.name||"").toLowerCase().includes(q);
+        const okCat = (cat==="Todas") || ((r.category||"General")===cat);
+        return okText && okCat;
+      })
+      .sort((a,b)=> (a.name||"").localeCompare(b.name||"", "es"));
+
+    arr.forEach(r=>{
+      const row=document.createElement("div");
+      row.className="listRow";
+      row.innerHTML = `
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <b>${esc(r.name)}</b>
+          <span class="chip">${esc(r.category||"General")}</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+          <button class="btn ghost" data-act="view">Ver</button>
+          <button class="btn" data-act="edit">Editar</button>
+        </div>
+      `;
+
+      row.querySelector('[data-act="view"]').addEventListener("click", ()=>{
+        const total = (r.lines||[]).reduce((acc,l)=>{
+          const ing=findIng(l.ingId);
+          const con = ing ? ing.cost*(1+IVA_RATE) : 0;
+          return acc + con*num(l.qty);
+        },0);
+        const per = total / Math.max(0.01, num(r.yieldQty));
+        const sell = Math.round(num(r.sellPrice));
+        const margin = sell>0 ? (sell - per) : 0;
+
+        const lines = (r.lines||[]).map(l=>{
+          const ing=findIng(l.ingId);
+          const n=ing?ing.name:"(insumo)";
+          const u=ing?(ing.unit==="kg"?"kg":"u"):"";
+          return `• ${esc(n)} — ${num(l.qty).toFixed(2).replace(".",",")} ${u}`;
+        }).join("<br>");
+
+        document.getElementById("detail").innerHTML = `
+          <div class="mini">
+            <b>${esc(r.name)}</b><br>
+            Categoría: <b>${esc(r.category||"General")}</b><br><br>
+            Rinde: <b class="mono">${r.yieldQty} ${r.yieldUnit==="kg"?"kg":"u"}</b><br>
+            Costo total: <b class="mono">${money(total)}</b><br>
+            Costo por rinde: <b class="mono">${money(per)}</b><br>
+            Venta: <b class="mono">${money(sell)}</b><br>
+            Margen: <b class="mono">${money(margin)}</b><br><br>
+            ${lines}
+          </div>
+        `;
+      });
+
+      row.querySelector('[data-act="edit"]').addEventListener("click", ()=>{
+        editingRecipeId = r.id;
+        draftLines = JSON.parse(JSON.stringify(r.lines||[]));
+        draftCategory = r.category || "General";
+        document.getElementById("rName").value = r.name || "";
+        document.getElementById("rYieldQty").value = String(r.yieldQty ?? 1).replace(".",",");
+        document.getElementById("rYieldUnit").value = r.yieldUnit || "u";
+        document.getElementById("rSellPrice").value = r.sellPrice ? intStr(r.sellPrice) : "";
+        document.getElementById("btnSaveRecipe").textContent = "Guardar cambios";
+        document.getElementById("btnDeleteRecipe").style.display = "";
+        document.querySelector('.tab[data-tab="armar"]').click();
+        renderDraft();
+      });
+
+      box.appendChild(row);
+    });
+
+    if(arr.length===0){
+      const d=document.createElement("div");
+      d.className="mini";
+      d.style.marginTop="10px";
+      d.textContent="No hay recetas.";
+      box.appendChild(d);
+    }
+  }
+
+  /** ========= BACKUP / RESTORE ========= */
+  document.getElementById("btnBackup").addEventListener("click", ()=>{
+    const data = JSON.stringify(state, null, 2);
+    const blob = new Blob([data], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href=url;
+    a.download="recetas-backup.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("btnRestore").addEventListener("click", ()=>{
+    const input=document.createElement("input");
+    input.type="file";
+    input.accept="application/json";
+    input.onchange = async ()=>{
+      const f=input.files && input.files[0];
+      if(!f) return;
+      try{
+        const txt=await f.text();
+        const parsed=JSON.parse(txt);
+        if(!parsed || typeof parsed!=="object") throw 0;
+        state.ingredients = Array.isArray(parsed.ingredients) ? parsed.ingredients : [];
+        state.recipes = Array.isArray(parsed.recipes) ? parsed.recipes : [];
+        state.categories = Array.isArray(parsed.categories) && parsed.categories.length ? parsed.categories : ["General"];
+        save();
+        alert("Importado OK.");
+      }catch{
+        alert("Archivo inválido.");
+      }
+    };
+    input.click();
+  });
+
+  /** ========= INIT ========= */
+  function renderAll(){
+    ensureCategories();
+    renderAddIngIvaLine();
+    renderIngTable();
+    buildPickIng();
+    renderCatFilter();
+    updateCatUI();
+    renderDraft();
+    renderRecipeList();
+    enablePressFX();
+  }
+
+  renderAll();
+  resetDraft();
+</script>
+</body>
+</html>
