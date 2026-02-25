@@ -29,7 +29,6 @@
       background:rgba(255,255,255,.03);
     }
     .top b{font-size:13px}
-    .top small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
     .right{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
     .btn{
       border:1px solid rgba(122,162,255,.45);
@@ -79,33 +78,14 @@
       background:rgba(0,0,0,.22);
       color:var(--text);
       outline:none;
-      font-size:16px; /* evita zoom iPhone */
+      font-size:16px;
       line-height:1.2;
     }
+    input[type="text"]{ -webkit-text-size-adjust:100%; }
     .row{display:flex;gap:10px;flex-wrap:wrap}
     .field{flex:1;min-width:170px}
     .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .sep{height:1px;background:var(--stroke);margin:12px 0}
-
-    .list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-    .item{
-      border:1px solid var(--stroke);
-      background:rgba(255,255,255,.02);
-      border-radius:14px;
-      padding:10px;
-      display:flex;justify-content:space-between;gap:10px;align-items:center;
-    }
-    .item b{font-size:13px}
-    .item small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
-    .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-    .chip{
-      border:1px solid var(--stroke);
-      border-radius:999px;
-      padding:6px 8px;
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
 
     .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .kpi{
@@ -131,16 +111,34 @@
     .td-actions{white-space:nowrap}
     .mini{color:var(--muted);font-size:12px;line-height:1.35}
     .mono{font-variant-numeric:tabular-nums}
+
+    .cell-input{
+      width:100%;
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:16px;
+      outline:none;
+    }
+    .cell-select{
+      width:100%;
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.18);
+      color:var(--text);
+      font-size:16px;
+      outline:none;
+    }
   </style>
 </head>
 
 <body>
 <div class="wrap">
   <div class="top">
-    <div>
-      <b>Recetas</b>
-      <small>Nombre · Insumo · Cantidad · Rinde · Costo · Venta · Margen</small>
-    </div>
+    <div><b>Recetas</b></div>
     <div class="right">
       <button class="btn ghost" id="btnBackup">Exportar</button>
       <button class="btn ghost" id="btnRestore">Importar</button>
@@ -148,27 +146,79 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="armar">Armar receta</button>
-    <button class="tab" data-tab="insumos">Insumos</button>
+    <button class="tab active" data-tab="insumos">Insumos</button>
+    <button class="tab" data-tab="armar">Armar receta</button>
     <button class="tab" data-tab="recetas">Lista de recetas</button>
   </div>
 
+  <!-- INSUMOS -->
+  <div id="view-insumos" class="grid">
+    <div class="card">
+      <h2>Insumos (edición directa)</h2>
+      <div class="mini">Editás en la tabla. Enter guarda.</div>
+      <div class="sep"></div>
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:46%">Nombre</th>
+              <th style="width:18%">Unidad</th>
+              <th style="width:22%">Precio</th>
+              <th style="width:14%"></th>
+            </tr>
+          </thead>
+          <tbody id="ingTable"></tbody>
+        </table>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="row">
+        <div class="field">
+          <label>Agregar insumo</label>
+          <input id="addIngName" />
+        </div>
+        <div class="field" style="min-width:140px">
+          <label>Unidad</label>
+          <select id="addIngUnit">
+            <option value="kg">kg</option>
+            <option value="u">unidad</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Precio</label>
+          <input id="addIngPrice" type="text" inputmode="decimal" />
+        </div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" id="btnAddIng">Agregar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Nota</h2>
+      <div class="mini">
+        • Unidades: “kg” o “unidad”.<br/>
+        • Cantidades: 1 = un kilo (o 1 unidad). 0,5 = medio kilo.
+      </div>
+    </div>
+  </div>
+
   <!-- ARMAR -->
-  <div id="view-armar" class="grid">
+  <div id="view-armar" class="grid" style="display:none">
     <div class="card">
       <h2>Armar receta</h2>
 
-      <!-- 1) Nombre de receta -->
+      <!-- Orden pedido -->
       <div class="row">
         <div class="field">
           <label>Nombre de receta</label>
-          <input id="rName" placeholder="Ej: Salsa de verdeo / Paella / Tarta" />
+          <input id="rName" />
         </div>
       </div>
 
       <div class="sep"></div>
 
-      <!-- 2) Insumo -->
       <div class="row">
         <div class="field">
           <label>Insumo</label>
@@ -176,31 +226,41 @@
         </div>
       </div>
 
-      <!-- 3) Cantidad -->
       <div class="row">
         <div class="field">
           <label>Cantidad</label>
-          <input id="lineQty" type="number" inputmode="decimal" step="0.01" min="0"
-                 placeholder="Ej: 0,5 o 2" />
+          <input id="lineQty" type="text" inputmode="decimal" />
           <div class="mini" id="unitHint" style="margin-top:6px"></div>
         </div>
       </div>
 
       <div class="btnrow">
-        <button class="btn" id="btnAddLine">Agregar</button>
-        <button class="btn ghost" id="btnNew">Nueva receta</button>
-        <button class="btn bad" id="btnClearDraft">Borrar borrador</button>
+        <button class="btn" id="btnAddLine">Agregar insumo</button>
       </div>
-
-      <div class="list" id="draftLines"></div>
 
       <div class="sep"></div>
 
-      <!-- 4) Rinde / unidad o kg -->
+      <div style="overflow:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Insumo</th>
+              <th style="width:18%">Cantidad</th>
+              <th style="width:14%">Unidad</th>
+              <th style="width:22%">Costo</th>
+              <th style="width:14%"></th>
+            </tr>
+          </thead>
+          <tbody id="recipeLinesTable"></tbody>
+        </table>
+      </div>
+
+      <div class="sep"></div>
+
       <div class="row">
         <div class="field" style="min-width:160px">
           <label>Rinde</label>
-          <input id="rYieldQty" type="number" inputmode="decimal" step="0.01" min="0.01" value="1" />
+          <input id="rYieldQty" type="text" inputmode="decimal" value="1"/>
         </div>
         <div class="field" style="min-width:160px">
           <label>Unidad</label>
@@ -213,89 +273,25 @@
 
       <div class="sep"></div>
 
-      <!-- 5) Costo (solo lectura, calculado) -->
       <div class="row">
         <div class="field">
-          <label>Costo (calculado)</label>
-          <input id="costReadonly" readonly />
-        </div>
-      </div>
-
-      <div class="sep"></div>
-
-      <!-- 6) Precio venta -->
-      <div class="row">
-        <div class="field">
-          <label>Precio venta (por rinde)</label>
-          <input id="rSellPrice" type="number" inputmode="decimal" step="0.01" min="0"
-                 placeholder="Ej: precio por kg o por unidad" />
+          <label>Precio venta</label>
+          <input id="rSellPrice" type="text" inputmode="decimal" />
         </div>
       </div>
 
       <div class="btnrow">
         <button class="btn" id="btnSaveRecipe">Confirmar receta</button>
-        <button class="btn bad" id="btnDeleteRecipe" style="display:none">Borrar receta</button>
       </div>
-
-      <div class="mini">Al confirmar: se guarda y se limpia para cargar otra.</div>
     </div>
 
-    <!-- 7) Margen + resumen -->
     <div class="card">
       <h2>Resumen</h2>
       <div class="kpis">
+        <div class="kpi"><span>Rinde</span><b id="kYield">0</b></div>
         <div class="kpi"><span>Costo total</span><b id="kTotal">$0</b></div>
         <div class="kpi"><span>Costo por rinde</span><b id="kPer">$0</b></div>
-        <div class="kpi"><span>Precio venta</span><b id="kSell">$0</b></div>
         <div class="kpi"><span>Margen</span><b id="kMargin">$0</b></div>
-      </div>
-      <div class="sep"></div>
-      <div class="mini">Nota: el costo usa el precio del insumo tal como lo cargaste (tu base).</div>
-    </div>
-  </div>
-
-  <!-- INSUMOS -->
-  <div id="view-insumos" class="grid" style="display:none">
-    <div class="card">
-      <h2>Agregar insumo</h2>
-      <div class="row">
-        <div class="field">
-          <label>Nombre</label>
-          <input id="ingName" placeholder="Ej: Merluza, Harina, Envase" />
-        </div>
-        <div class="field">
-          <label>Unidad</label>
-          <select id="ingUnit">
-            <option value="kg">kg</option>
-            <option value="u">unidad</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>Precio (por unidad)</label>
-          <input id="ingPrice" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Ej: 18000 / 300" />
-        </div>
-      </div>
-      <div class="btnrow">
-        <button class="btn" id="btnSaveIng">Guardar</button>
-        <button class="btn ghost" id="btnClearIng">Limpiar</button>
-      </div>
-      <div class="mini">Tip: mantenelo simple: kg o unidad y precio por esa unidad.</div>
-    </div>
-
-    <div class="card">
-      <h2>Hoja de insumos</h2>
-      <div style="overflow:auto">
-        <table>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Unidad</th>
-              <th>Precio</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="ingTable"></tbody>
-        </table>
       </div>
     </div>
   </div>
@@ -307,10 +303,10 @@
       <div class="row">
         <div class="field">
           <label>Buscar</label>
-          <input id="search" placeholder="Nombre..." />
+          <input id="search" />
         </div>
       </div>
-      <div class="list" id="recipeList"></div>
+      <div id="recipeList"></div>
     </div>
 
     <div class="card">
@@ -321,7 +317,7 @@
 </div>
 
 <script>
-  const LS = "sm_recetas_orden_v1";
+  const LS = "sm_recetas_v2";
   const state = load();
 
   function load(){
@@ -341,11 +337,16 @@
   function uid(){ return Math.random().toString(16).slice(2) + Date.now().toString(16); }
   const fmt = new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:2});
   function money(n){ return fmt.format(Number.isFinite(n)?n:0); }
-  function num(v){ const x=parseFloat(String(v).replace(",", ".")); return Number.isFinite(x)?x:0; }
+
+  // acepta coma o punto
+  function num(v){
+    const s = String(v ?? "").trim().replace(/\./g, "").replace(",", ".");
+    const x = parseFloat(s);
+    return Number.isFinite(x)?x:0;
+  }
   function esc(s){ return String(s??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;"); }
 
   function findIng(id){ return state.ingredients.find(x=>x.id===id); }
-  function findRec(id){ return state.recipes.find(x=>x.id===id); }
 
   // Tabs
   const tabs = Array.from(document.querySelectorAll(".tab"));
@@ -354,79 +355,105 @@
       tabs.forEach(x=>x.classList.remove("active"));
       t.classList.add("active");
       const tab=t.dataset.tab;
-      document.getElementById("view-armar").style.display = tab==="armar" ? "" : "none";
       document.getElementById("view-insumos").style.display = tab==="insumos" ? "" : "none";
+      document.getElementById("view-armar").style.display = tab==="armar" ? "" : "none";
       document.getElementById("view-recetas").style.display = tab==="recetas" ? "" : "none";
       renderAll();
     });
   });
 
-  /** ========= INSUMOS ========= */
-  let editingIngId = null;
-
-  document.getElementById("btnSaveIng").addEventListener("click", ()=>{
-    const name = document.getElementById("ingName").value.trim();
-    const unit = document.getElementById("ingUnit").value;
-    const price = num(document.getElementById("ingPrice").value);
-    if(!name) return alert("Poné nombre.");
-    if(price<=0) return alert("Precio debe ser > 0.");
-
-    const obj = { id: editingIngId || uid(), name, unit, price };
-    if(editingIngId){
-      state.ingredients = state.ingredients.map(x=>x.id===editingIngId ? obj : x);
-    }else{
-      state.ingredients.push(obj);
-    }
-    clearIngForm();
-    save();
-  });
-
-  document.getElementById("btnClearIng").addEventListener("click", clearIngForm);
-
-  function clearIngForm(){
-    editingIngId = null;
-    document.getElementById("ingName").value = "";
-    document.getElementById("ingUnit").value = "kg";
-    document.getElementById("ingPrice").value = "";
-    document.getElementById("btnSaveIng").textContent = "Guardar";
-  }
-
+  /** ========= INSUMOS (edición en tabla) ========= */
   function renderIngTable(){
     const tb = document.getElementById("ingTable");
     tb.innerHTML = "";
 
-    state.ingredients
-      .slice()
-      .sort((a,b)=>a.name.localeCompare(b.name,"es"))
-      .forEach(ing=>{
-        const tr=document.createElement("tr");
-        tr.innerHTML = `
-          <td><b>${esc(ing.name)}</b></td>
-          <td class="mono">${ing.unit==="kg"?"kg":"u"}</td>
-          <td class="mono">${money(ing.price)}</td>
-          <td class="td-actions">
-            <button class="btn ghost" data-act="edit">Editar</button>
-            <button class="btn bad" data-act="del">Borrar</button>
-          </td>
-        `;
-        tr.querySelector('[data-act="edit"]').addEventListener("click", ()=>{
-          editingIngId = ing.id;
-          document.getElementById("ingName").value = ing.name;
-          document.getElementById("ingUnit").value = ing.unit;
-          document.getElementById("ingPrice").value = ing.price;
-          document.getElementById("btnSaveIng").textContent = "Guardar cambios";
-          document.querySelector('.tab[data-tab="insumos"]').click();
+    const arr = state.ingredients.slice().sort((a,b)=>a.name.localeCompare(b.name,"es"));
+
+    arr.forEach(ing=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <input class="cell-input" data-k="name" value="${esc(ing.name)}">
+        </td>
+        <td>
+          <select class="cell-select" data-k="unit">
+            <option value="kg"${ing.unit==="kg"?" selected":""}>kg</option>
+            <option value="u"${ing.unit==="u"?" selected":""}>unidad</option>
+          </select>
+        </td>
+        <td>
+          <input class="cell-input" data-k="price" inputmode="decimal" value="${String(ing.price??"").replace(".",",")}">
+        </td>
+        <td class="td-actions">
+          <button class="btn ghost" data-act="save">Guardar</button>
+          <button class="btn bad" data-act="del">Borrar</button>
+        </td>
+      `;
+
+      const nameEl = tr.querySelector('[data-k="name"]');
+      const unitEl = tr.querySelector('[data-k="unit"]');
+      const priceEl= tr.querySelector('[data-k="price"]');
+
+      function doSave(){
+        const name = nameEl.value.trim();
+        const unit = unitEl.value;
+        const price = num(priceEl.value);
+        if(!name) return alert("Nombre vacío.");
+        if(price<=0) return alert("Precio debe ser > 0.");
+        ing.name = name;
+        ing.unit = unit;
+        ing.price = price;
+        save();
+      }
+
+      tr.querySelector('[data-act="save"]').addEventListener("click", doSave);
+
+      // Enter guarda
+      [nameEl, priceEl].forEach(el=>{
+        el.addEventListener("keydown", (e)=>{
+          if(e.key==="Enter"){ e.preventDefault(); doSave(); }
         });
-        tr.querySelector('[data-act="del"]').addEventListener("click", ()=>{
-          const used = state.recipes.some(r=>r.lines.some(l=>l.ingId===ing.id));
-          if(used) return alert("Ese insumo está usado en una receta. Borrá/edita la receta primero.");
-          if(confirm(`Borrar "${ing.name}"?`)){
-            state.ingredients = state.ingredients.filter(x=>x.id!==ing.id);
-            save();
-          }
-        });
-        tb.appendChild(tr);
       });
+
+      tr.querySelector('[data-act="del"]').addEventListener("click", ()=>{
+        const used = state.recipes.some(r=>r.lines.some(l=>l.ingId===ing.id));
+        if(used) return alert("Ese insumo está usado en una receta. Borrá/edita la receta primero.");
+        if(confirm(`Borrar "${ing.name}"?`)){
+          state.ingredients = state.ingredients.filter(x=>x.id!==ing.id);
+          save();
+        }
+      });
+
+      tb.appendChild(tr);
+    });
+  }
+
+  // agregar insumo
+  document.getElementById("btnAddIng").addEventListener("click", ()=>{
+    const name = document.getElementById("addIngName").value.trim();
+    const unit = document.getElementById("addIngUnit").value;
+    const price= num(document.getElementById("addIngPrice").value);
+    if(!name) return alert("Poné nombre.");
+    if(price<=0) return alert("Precio debe ser > 0.");
+    state.ingredients.push({ id: uid(), name, unit, price });
+    document.getElementById("addIngName").value="";
+    document.getElementById("addIngPrice").value="";
+    save();
+  });
+
+  /** ========= ARMAR RECETA ========= */
+  let draft = emptyDraft();
+  function emptyDraft(){
+    return { name:"", yieldQty:1, yieldUnit:"u", sellPrice:0, lines:[] };
+  }
+  function resetDraft(){
+    draft = emptyDraft();
+    document.getElementById("rName").value="";
+    document.getElementById("rYieldQty").value="1";
+    document.getElementById("rYieldUnit").value="u";
+    document.getElementById("rSellPrice").value="";
+    document.getElementById("lineQty").value="";
+    renderDraft();
   }
 
   function buildPickIng(){
@@ -435,9 +462,9 @@
     if(state.ingredients.length===0){
       const opt=document.createElement("option");
       opt.value="";
-      opt.textContent="Cargá insumos primero";
+      opt.textContent="(sin insumos)";
       pick.appendChild(opt);
-      document.getElementById("unitHint").textContent = "";
+      document.getElementById("unitHint").textContent="";
       return;
     }
     state.ingredients
@@ -456,145 +483,107 @@
     const ingId = document.getElementById("pickIng").value;
     const ing = findIng(ingId);
     document.getElementById("unitHint").textContent =
-      ing ? `Unidad del insumo: ${ing.unit==="kg"?"kg":"unidad"} (se usa esa)` : "";
+      ing ? `Unidad: ${ing.unit==="kg"?"kg":"unidad"}` : "";
   }
-
   document.getElementById("pickIng").addEventListener("change", updateUnitHint);
-
-  /** ========= ARMAR RECETA ========= */
-  let draft = emptyDraft();
-  function emptyDraft(){
-    return { id:null, name:"", yieldQty:1, yieldUnit:"u", sellPrice:0, lines:[] };
-  }
-
-  function resetDraft(){
-    draft = emptyDraft();
-    syncDraftToUI();
-    document.getElementById("btnDeleteRecipe").style.display="none";
-    renderDraft();
-  }
-
-  function syncDraftToUI(){
-    document.getElementById("rName").value = draft.name || "";
-    document.getElementById("rYieldQty").value = draft.yieldQty ?? 1;
-    document.getElementById("rYieldUnit").value = draft.yieldUnit || "u";
-    document.getElementById("rSellPrice").value = draft.sellPrice ? String(draft.sellPrice) : "";
-    document.getElementById("lineQty").value = "";
-    document.getElementById("costReadonly").value = "";
-  }
-
-  function syncUIToDraft(){
-    draft.name = document.getElementById("rName").value.trim();
-    draft.yieldQty = Math.max(0.01, num(document.getElementById("rYieldQty").value) || 1);
-    draft.yieldUnit = document.getElementById("rYieldUnit").value;
-    draft.sellPrice = num(document.getElementById("rSellPrice").value);
-  }
-
-  ["rName","rYieldQty","rYieldUnit","rSellPrice"].forEach(id=>{
-    document.getElementById(id).addEventListener("input", ()=>{ syncUIToDraft(); renderDraft(); });
-    document.getElementById(id).addEventListener("change", ()=>{ syncUIToDraft(); renderDraft(); });
-  });
-
-  document.getElementById("btnNew").addEventListener("click", resetDraft);
-  document.getElementById("btnClearDraft").addEventListener("click", ()=>{
-    if(confirm("Borrar borrador?")) resetDraft();
-  });
 
   document.getElementById("btnAddLine").addEventListener("click", ()=>{
     if(state.ingredients.length===0) return alert("Cargá insumos primero.");
     const ingId = document.getElementById("pickIng").value;
     const ing = findIng(ingId);
-    if(!ing) return alert("Elegí un insumo válido.");
+    if(!ing) return alert("Elegí un insumo.");
     const qty = num(document.getElementById("lineQty").value);
     if(qty<=0) return alert("Cantidad debe ser > 0.");
-
-    draft.lines.push({ ingId, qty }); // unidad se deduce del insumo
+    draft.lines.push({ ingId, qty });
     document.getElementById("lineQty").value="";
     renderDraft();
   });
 
-  function recipeCostTotal(r){
-    let total=0;
-    for(const l of r.lines){
+  function costTotal(){
+    let t=0;
+    for(const l of draft.lines){
       const ing=findIng(l.ingId);
       if(!ing) continue;
-      total += ing.price * num(l.qty);
+      t += ing.price * num(l.qty);
     }
-    return total;
+    return t;
   }
-  function recipeCostPer(r){
-    const y = Math.max(0.01, num(r.yieldQty));
-    return recipeCostTotal(r)/y;
+  function costPerRinde(){
+    const y = Math.max(0.01, num(document.getElementById("rYieldQty").value));
+    return costTotal()/y;
+  }
+
+  function renderLinesTable(){
+    const tb = document.getElementById("recipeLinesTable");
+    tb.innerHTML="";
+    draft.lines.forEach((l, idx)=>{
+      const ing=findIng(l.ingId);
+      const name = ing?ing.name:"(insumo)";
+      const unit = ing?(ing.unit==="kg"?"kg":"u"):"";
+      const lineCost = ing ? (ing.price * num(l.qty)) : 0;
+
+      const tr=document.createElement("tr");
+      tr.innerHTML = `
+        <td><b>${esc(name)}</b></td>
+        <td class="mono">${num(l.qty).toFixed(2).replace(".",",")}</td>
+        <td class="mono">${unit}</td>
+        <td class="mono">${money(lineCost)}</td>
+        <td class="td-actions"><button class="btn bad">Borrar</button></td>
+      `;
+      tr.querySelector("button").addEventListener("click", ()=>{
+        draft.lines.splice(idx,1);
+        renderDraft();
+      });
+      tb.appendChild(tr);
+    });
   }
 
   function renderDraft(){
     buildPickIng();
+    renderLinesTable();
 
-    const dl = document.getElementById("draftLines");
-    dl.innerHTML="";
+    const yQty = Math.max(0.01, num(document.getElementById("rYieldQty").value));
+    const yUnit= document.getElementById("rYieldUnit").value;
+    const total = costTotal();
+    const per = total / yQty;
 
-    draft.lines.forEach((l, idx)=>{
-      const ing=findIng(l.ingId);
-      const name = ing ? ing.name : "(insumo borrado)";
-      const unit = ing ? (ing.unit==="kg"?"kg":"u") : "";
-      const price = ing ? ing.price : 0;
-      const lineCost = price * num(l.qty);
-
-      const el=document.createElement("div");
-      el.className="item";
-      el.innerHTML = `
-        <div>
-          <b>${esc(name)}</b>
-          <small class="mono">${l.qty.toFixed(2).replace(".",",")} ${unit} · ${money(lineCost)}</small>
-        </div>
-        <div class="actions">
-          <button class="btn bad" data-act="del">Borrar</button>
-        </div>
-      `;
-      el.querySelector('[data-act="del"]').addEventListener("click", ()=>{ draft.lines.splice(idx,1); renderDraft(); });
-      dl.appendChild(el);
-    });
-
-    syncUIToDraft();
-
-    const total = recipeCostTotal(draft);
-    const per = recipeCostPer(draft);
-    const sell = num(draft.sellPrice);
+    const sell = num(document.getElementById("rSellPrice").value);
     const margin = sell>0 ? (sell - per) : 0;
     const pct = sell>0 ? (margin/sell)*100 : 0;
 
-    document.getElementById("costReadonly").value = `${money(total)} total · ${money(per)} por rinde`;
+    document.getElementById("kYield").textContent = `${yQty.toFixed(2).replace(".",",")} ${yUnit==="kg"?"kg":"u"}`;
     document.getElementById("kTotal").textContent = money(total);
     document.getElementById("kPer").textContent = money(per);
-    document.getElementById("kSell").textContent = money(sell);
     document.getElementById("kMargin").textContent = sell>0 ? `${money(margin)} (${pct.toFixed(1)}%)` : money(0);
-
-    document.getElementById("btnDeleteRecipe").style.display = draft.id ? "" : "none";
   }
 
-  document.getElementById("btnSaveRecipe").addEventListener("click", ()=>{
-    syncUIToDraft();
-    if(!draft.name) return alert("Poné nombre de receta.");
-    if(draft.lines.length===0) return alert("Agregá al menos 1 insumo.");
-
-    const obj = JSON.parse(JSON.stringify(draft));
-    obj.id = uid();
-    obj.createdAt = Date.now();
-
-    state.recipes.push(obj);
-    save();
-
-    alert("Guardada ✅");
-    resetDraft(); // se vacía para cargar otra
+  ["rYieldQty","rYieldUnit","rSellPrice"].forEach(id=>{
+    document.getElementById(id).addEventListener("input", renderDraft);
+    document.getElementById(id).addEventListener("change", renderDraft);
   });
 
-  document.getElementById("btnDeleteRecipe").addEventListener("click", ()=>{
-    if(!draft.id) return;
-    if(confirm(`Borrar receta "${draft.name}"?`)){
-      state.recipes = state.recipes.filter(r=>r.id!==draft.id);
-      save();
-      resetDraft();
-    }
+  document.getElementById("btnSaveRecipe").addEventListener("click", ()=>{
+    const name = document.getElementById("rName").value.trim();
+    if(!name) return alert("Poné nombre de receta.");
+    if(draft.lines.length===0) return alert("Agregá al menos 1 insumo.");
+
+    const yieldQty = Math.max(0.01, num(document.getElementById("rYieldQty").value));
+    const yieldUnit= document.getElementById("rYieldUnit").value;
+    const sellPrice= num(document.getElementById("rSellPrice").value);
+
+    state.recipes.push({
+      id: uid(),
+      name,
+      yieldQty,
+      yieldUnit,
+      sellPrice,
+      lines: JSON.parse(JSON.stringify(draft.lines)),
+      createdAt: Date.now()
+    });
+
+    save();
+    alert("Guardada ✅");
+    resetDraft(); // se vacía
   });
 
   /** ========= LISTA RECETAS ========= */
@@ -602,67 +591,73 @@
 
   function renderRecipeList(){
     const q = document.getElementById("search").value.trim().toLowerCase();
-    const list = document.getElementById("recipeList");
-    list.innerHTML="";
+    const box = document.getElementById("recipeList");
+    box.innerHTML = "";
 
     const arr = state.recipes
       .filter(r=> !q || (r.name||"").toLowerCase().includes(q))
       .sort((a,b)=> (a.name||"").localeCompare(b.name||"", "es"));
 
     arr.forEach(r=>{
-      const total = recipeCostTotal(r);
-      const per = recipeCostPer(r);
+      const total = r.lines.reduce((acc,l)=>{
+        const ing=findIng(l.ingId);
+        return acc + (ing? ing.price*num(l.qty):0);
+      },0);
+      const per = total / Math.max(0.01, num(r.yieldQty));
       const sell = num(r.sellPrice);
       const margin = sell>0 ? (sell - per) : 0;
 
-      const el=document.createElement("div");
-      el.className="item";
-      el.innerHTML=`
-        <div>
-          <b>${esc(r.name)}</b>
-          <small class="mono">costo ${money(per)}/${r.yieldUnit==="kg"?"kg":"u"} · venta ${money(sell)} · margen ${money(margin)}</small>
-        </div>
-        <div class="actions">
-          <button class="btn ghost" data-act="open">Abrir</button>
-          <button class="btn bad" data-act="del">Borrar</button>
+      const div=document.createElement("div");
+      div.className="card";
+      div.style.marginTop="10px";
+      div.innerHTML = `
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+          <div>
+            <b>${esc(r.name)}</b>
+            <div class="mini mono">rinde ${r.yieldQty} ${r.yieldUnit==="kg"?"kg":"u"} · costo ${money(per)} · venta ${money(sell)} · margen ${money(margin)}</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn ghost" data-act="view">Ver</button>
+            <button class="btn bad" data-act="del">Borrar</button>
+          </div>
         </div>
       `;
-      el.querySelector('[data-act="open"]').addEventListener("click", ()=>{
-        // solo muestra detalle, NO carga el borrador (porque vos querés cargar rápido otra)
+      div.querySelector('[data-act="view"]').addEventListener("click", ()=>{
         const lines = r.lines.map(l=>{
           const ing=findIng(l.ingId);
-          const n = ing?ing.name:"(insumo)";
-          const unit = ing ? (ing.unit==="kg"?"kg":"u") : "";
-          return `• ${esc(n)} — ${l.qty.toFixed(2).replace(".",",")} ${unit}`;
+          const n=ing?ing.name:"(insumo)";
+          const u=ing?(ing.unit==="kg"?"kg":"u"):"";
+          return `• ${esc(n)} — ${num(l.qty).toFixed(2).replace(".",",")} ${u}`;
         }).join("<br>");
-
         document.getElementById("detail").innerHTML = `
           <div class="mini">
-            <b>${esc(r.name)}</b><br>
-            Rinde: <b class="mono">${r.yieldQty} ${r.yieldUnit==="kg"?"kg":"u"}</b><br><br>
+            <b>${esc(r.name)}</b><br><br>
+            Rinde: <b class="mono">${r.yieldQty} ${r.yieldUnit==="kg"?"kg":"u"}</b><br>
             Costo total: <b class="mono">${money(total)}</b><br>
             Costo por rinde: <b class="mono">${money(per)}</b><br>
             Venta: <b class="mono">${money(sell)}</b><br>
             Margen: <b class="mono">${money(margin)}</b><br><br>
-            ${lines || "—"}
+            ${lines}
           </div>
         `;
       });
-      el.querySelector('[data-act="del"]').addEventListener("click", ()=>{
+      div.querySelector('[data-act="del"]').addEventListener("click", ()=>{
         if(confirm(`Borrar "${r.name}"?`)){
           state.recipes = state.recipes.filter(x=>x.id!==r.id);
           save();
-          document.getElementById("detail").textContent = "Elegí una receta.";
+          document.getElementById("detail").textContent="Elegí una receta.";
         }
       });
-      list.appendChild(el);
+
+      box.appendChild(div);
     });
 
     if(arr.length===0){
-      const e=document.createElement("div");
-      e.className="mini";
-      e.textContent="No hay recetas todavía.";
-      list.appendChild(e);
+      const d=document.createElement("div");
+      d.className="mini";
+      d.style.marginTop="10px";
+      d.textContent="No hay recetas.";
+      box.appendChild(d);
     }
   }
 
@@ -702,7 +697,7 @@
     input.click();
   });
 
-  /** ========= RENDER ========= */
+  /** ========= RENDER ALL ========= */
   function renderAll(){
     renderIngTable();
     buildPickIng();
