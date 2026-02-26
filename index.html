@@ -7,17 +7,17 @@
 
 <style>
 :root{
-  --bg:#0f1115;
-  --card: rgba(255,255,255,.03);
+  --bg:#0e1013;
+  --panel: rgba(255,255,255,.04);
+  --panel2: rgba(255,255,255,.06);
   --stroke: rgba(255,255,255,.10);
   --text:#e8ecf6;
   --muted: rgba(232,236,246,.62);
   --brand:#7aa2ff;
   --bad:#ff5b6b;
   --good:#44d07b;
-  --r:16px;
-  --shadow: 0 10px 28px rgba(0,0,0,.40);
-  --press: translateY(1px) scale(.99);
+  --r:14px;
+  --shadow: 0 10px 26px rgba(0,0,0,.42);
 }
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -25,8 +25,8 @@ body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   background:
-    radial-gradient(900px 520px at 20% -10%, rgba(122,162,255,.12), transparent 60%),
-    radial-gradient(820px 480px at 95% 15%, rgba(68,208,123,.08), transparent 55%),
+    radial-gradient(900px 520px at 20% -10%, rgba(122,162,255,.10), transparent 60%),
+    radial-gradient(820px 480px at 95% 15%, rgba(68,208,123,.06), transparent 55%),
     var(--bg);
   color:var(--text);
 }
@@ -35,9 +35,9 @@ body{
 .top{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
   border:1px solid var(--stroke);
-  border-radius:var(--r);
+  border-radius:999px;
   padding:10px 12px;
-  background:var(--card);
+  background:rgba(255,255,255,.03);
   box-shadow: var(--shadow);
 }
 .brandTitle{font-weight:900;letter-spacing:.2px}
@@ -48,7 +48,7 @@ body{
   background:rgba(255,255,255,.03);
   color:var(--text);
   padding:9px 12px;
-  border-radius:12px;
+  border-radius:999px;
   font-weight:900;
   font-size:13px;
   cursor:pointer;
@@ -56,18 +56,18 @@ body{
   transition: transform .08s, filter .08s;
 }
 .btn.primary{
-  border-color:rgba(122,162,255,.50);
+  border-color:rgba(122,162,255,.55);
   background:rgba(122,162,255,.14);
 }
 .btn.bad{
   border-color:rgba(255,91,107,.55);
-  background:rgba(255,91,107,.12);
+  background:rgba(255,91,107,.10);
 }
-.btn:active{transform:var(--press); filter:brightness(1.08)}
+.btn:active{transform:translateY(1px) scale(.99); filter:brightness(1.08)}
 .btn.icon{
   padding:7px 10px;
   font-size:14px;
-  border-radius:10px;
+  border-radius:999px;
   min-width:38px;
 }
 
@@ -90,10 +90,10 @@ body{
 .card{
   border:1px solid var(--stroke);
   border-radius:var(--r);
-  background:var(--card);
+  background:var(--panel);
   padding:12px;
   margin-top:10px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.32);
+  box-shadow: 0 8px 22px rgba(0,0,0,.30);
 }
 
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -115,14 +115,15 @@ input:focus,select:focus,textarea:focus{
   box-shadow:0 0 0 3px rgba(122,162,255,.10);
 }
 
+.hr{height:1px;background:rgba(255,255,255,.10);margin:10px 0}
+.hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.35}
+
 .moneyField{position:relative}
 .moneyField:before{
   content:"$";
-  position:absolute;
-  left:12px;
-  top:50%;
+  position:absolute;left:12px;top:50%;
   transform:translateY(-50%);
-  color:rgba(232,236,246,.80);
+  color:rgba(232,236,246,.85);
   font-weight:900;
   pointer-events:none;
 }
@@ -130,9 +131,6 @@ input:focus,select:focus,textarea:focus{
   padding-left:34px;
   text-align:left;
 }
-
-.hint{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.35}
-.hr{height:1px;background:rgba(255,255,255,.10);margin:10px 0}
 
 .tableWrap{overflow:auto; -webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:separate;border-spacing:0 8px;min-width:720px}
@@ -161,8 +159,11 @@ td:last-child{border-radius:0 12px 12px 0}
   box-shadow:0 0 0 3px rgba(122,162,255,.10);
 }
 
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media (max-width:720px){.kpis{grid-template-columns:1fr}}
+.kpis{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
 .kpi{
   border:1px solid var(--stroke);
   border-radius:12px;
@@ -298,14 +299,13 @@ td:last-child{border-radius:0 12px 12px 0}
           <select id="lineIng"></select>
         </div>
         <div>
-          <label>Cantidad (acepta coma)</label>
-          <input id="lineQty" type="text" inputmode="decimal" autocomplete="off" placeholder="0,5"/>
+          <label>Cantidad</label>
+          <input id="lineQty" type="text" inputmode="decimal" autocomplete="off"/>
         </div>
       </div>
 
       <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn primary" id="btnAddLine">Agregar</button>
-        <button class="btn" id="btnClearDraft">Vaciar receta</button>
       </div>
 
       <div class="hr"></div>
@@ -327,10 +327,11 @@ td:last-child{border-radius:0 12px 12px 0}
 
       <div class="hr"></div>
 
-      <div class="row">
+      <!-- RINDE + UNIDAD AL LADO -->
+      <div class="row" style="grid-template-columns:1fr 1fr">
         <div>
           <label>Rinde</label>
-          <input id="recYield" type="text" inputmode="decimal" autocomplete="off" placeholder="1"/>
+          <input id="recYield" type="text" inputmode="decimal" autocomplete="off"/>
         </div>
         <div>
           <label>Unidad del rinde</label>
@@ -344,7 +345,7 @@ td:last-child{border-radius:0 12px 12px 0}
       <div style="margin-top:10px">
         <label>Precio venta</label>
         <div class="moneyField">
-          <input id="recSell" type="text" inputmode="numeric" autocomplete="off" placeholder="20.000"/>
+          <input id="recSell" type="text" inputmode="numeric" autocomplete="off"/>
         </div>
       </div>
 
@@ -357,8 +358,13 @@ td:last-child{border-radius:0 12px 12px 0}
         <button class="btn primary" id="btnSaveRecipe">Confirmar receta</button>
         <button class="btn bad" id="btnDeleteRecipe" style="display:none">Borrar receta</button>
       </div>
+
+      <div class="hint" style="margin-top:10px">
+        Al confirmar, se limpia para cargar otra.
+      </div>
     </div>
 
+    <!-- TOTALES 2x2 -->
     <div class="card">
       <div class="kpis">
         <div class="kpi">
@@ -393,7 +399,7 @@ td:last-child{border-radius:0 12px 12px 0}
       <div class="searchRow">
         <div>
           <label>Buscar</label>
-          <input id="searchText" autocomplete="off" placeholder="Nombre de receta..."/>
+          <input id="searchText" autocomplete="off"/>
         </div>
         <div>
           <label>Filtrar por categoría</label>
@@ -413,8 +419,7 @@ td:last-child{border-radius:0 12px 12px 0}
    DATA
 ========================= */
 const LS_KEY = "sm_recetas_v1";
-// IVA fijo (no se muestra en pantalla)
-const IVA_RATE = 0.21;
+const IVA_RATE = 0.21; // fijo, no se muestra
 
 const defaultData = {
   categories: ["General","Salsas","Sushi","Rotisería","Pescadería"],
@@ -454,8 +459,7 @@ function intToMoney(n){
 }
 function setMoneyInputBehavior(input){
   input.addEventListener("input", ()=>{
-    const raw = input.value;
-    const digits = raw.replace(/\D/g,"").replace(/^0+(?=\d)/,"");
+    const digits = input.value.replace(/\D/g,"").replace(/^0+(?=\d)/,"");
     input.value = digits ? digits.replace(/\B(?=(\d{3})+(?!\d))/g,".") : "";
   });
 }
@@ -561,7 +565,7 @@ function renderIngsSelect(){
   sel.innerHTML = "";
   const p = document.createElement("option");
   p.value = "";
-  p.textContent = "Elegí insumo";
+  p.textContent = (data.ingredients.length ? "Elegí insumo" : "No hay insumos cargados");
   sel.appendChild(p);
 
   const sorted = [...data.ingredients].sort((a,b)=>a.name.localeCompare(b.name,"es"));
@@ -571,6 +575,12 @@ function renderIngsSelect(){
     o.textContent = ing.name;
     sel.appendChild(o);
   });
+
+  // si no hay insumos, deshabilito el select y el botón agregar línea
+  const has = data.ingredients.length>0;
+  $("lineIng").disabled = !has;
+  $("btnAddLine").disabled = !has;
+  $("btnAddLine").style.opacity = has ? "1" : ".55";
 }
 
 function renderIngsTable(){
@@ -609,7 +619,6 @@ function renderIngsTable(){
 
       ing.costNoIva = moneyToInt(inp.value);
 
-      // Si es insumo “receta”, lo mantenemos sincronizado (no editable manual)
       if(ing.kind==="recipe" && ing.recipeId){
         syncRecipeIngredientCost(ing.recipeId);
       }
@@ -674,7 +683,7 @@ function computeDraftTotals(){
   const y = Number(draft.yield||0) || 0;
   const per = y>0 ? Math.round(total / y) : 0;
 
-  const sell = draft.sell; // precio final que cargás
+  const sell = draft.sell;
   const margin = sell - per;
   const pct = sell>0 ? (margin / sell) : 0;
 
@@ -797,6 +806,8 @@ function addIngredient(){
 }
 
 function addLine(){
+  if(!data.ingredients.length) return;
+
   const ingId = Number($("lineIng").value||0);
   if(!ingId) return;
 
@@ -844,7 +855,6 @@ function saveRecipe(){
     data.ingredients = data.ingredients.filter(i=>!(i.kind==="recipe" && i.recipeId===payload.id));
   }
 
-  // confirmar => vacía para cargar otra
   resetDraft();
   syncDraftToForm();
   save();
@@ -881,11 +891,8 @@ function upsertRecipeAsIngredient(recipeId){
   const r = getRecipeById(recipeId);
   if(!r) return;
 
-  // costo por rinde (Con IVA)
   const totals = computeRecipeTotals(r);
   const costPerYieldConIva = totals.per;
-
-  // guardar como SIN IVA para mantener regla “insumos sin IVA”
   const costNoIva = Math.round(costPerYieldConIva / (1 + IVA_RATE));
 
   const existing = data.ingredients.find(i=>i.kind==="recipe" && i.recipeId===recipeId);
@@ -962,13 +969,7 @@ $("tabArmar").onclick = ()=>showTab("viewArmar");
 $("tabLista").onclick = ()=>showTab("viewLista");
 
 $("btnAddIng").onclick = addIngredient;
-
 $("btnAddLine").onclick = addLine;
-$("btnClearDraft").onclick = ()=>{
-  resetDraft();
-  syncDraftToForm();
-  renderAll();
-};
 
 $("btnSaveRecipe").onclick = saveRecipe;
 $("btnDeleteRecipe").onclick = deleteRecipe;
@@ -992,8 +993,9 @@ renderAll();
 syncDraftToForm();
 
 /*
-Nota iPhone:
-- Cantidad acepta "0,5" o "0.5". (Lo convertimos igual)
+Notas:
+- Cantidad acepta "0,5" o "0.5".
+- Si no hay insumos cargados, "Agregar" en receta queda deshabilitado.
 */
 </script>
 </body>
