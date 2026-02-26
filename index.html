@@ -8,8 +8,7 @@
 <style>
 :root{
   --bg:#0e1013;
-  --panel: rgba(255,255,255,.04);
-  --panel2: rgba(255,255,255,.06);
+  --panel: rgba(255,255,255,.035);
   --stroke: rgba(255,255,255,.10);
   --text:#e8ecf6;
   --muted: rgba(232,236,246,.62);
@@ -19,14 +18,15 @@
   --r:14px;
   --shadow: 0 10px 26px rgba(0,0,0,.42);
 }
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
   background:
-    radial-gradient(900px 520px at 20% -10%, rgba(122,162,255,.10), transparent 60%),
-    radial-gradient(820px 480px at 95% 15%, rgba(68,208,123,.06), transparent 55%),
+    radial-gradient(900px 520px at 20% -10%, rgba(122,162,255,.09), transparent 60%),
+    radial-gradient(820px 480px at 95% 15%, rgba(68,208,123,.05), transparent 55%),
     var(--bg);
   color:var(--text);
 }
@@ -53,7 +53,7 @@ body{
   font-size:13px;
   cursor:pointer;
   user-select:none;
-  transition: transform .08s, filter .08s;
+  transition: transform .08s, filter .08s, background .12s;
 }
 .btn.primary{
   border-color:rgba(122,162,255,.55);
@@ -63,7 +63,7 @@ body{
   border-color:rgba(255,91,107,.55);
   background:rgba(255,91,107,.10);
 }
-.btn:active{transform:translateY(1px) scale(.99); filter:brightness(1.08)}
+.btn:active{transform:translateY(1px) scale(.99); filter:brightness(1.10)}
 .btn.icon{
   padding:7px 10px;
   font-size:14px;
@@ -93,14 +93,14 @@ body{
   background:var(--panel);
   padding:12px;
   margin-top:10px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.30);
+  box-shadow: 0 8px 22px rgba(0,0,0,.28);
 }
 
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:720px){ .row{grid-template-columns:1fr} }
 
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
-input,select,textarea{
+input,select{
   width:100%;
   padding:11px 12px;
   border-radius:12px;
@@ -110,7 +110,7 @@ input,select,textarea{
   font-size:16px;
   outline:none;
 }
-input:focus,select:focus,textarea:focus{
+input:focus,select:focus{
   border-color:rgba(122,162,255,.7);
   box-shadow:0 0 0 3px rgba(122,162,255,.10);
 }
@@ -123,21 +123,20 @@ input:focus,select:focus,textarea:focus{
   content:"$";
   position:absolute;left:12px;top:50%;
   transform:translateY(-50%);
-  color:rgba(232,236,246,.85);
+  color:rgba(232,236,246,.90);
   font-weight:900;
   pointer-events:none;
 }
-.moneyField input{
-  padding-left:34px;
-  text-align:left;
-}
+.moneyField input{padding-left:34px;text-align:left}
 
-.tableWrap{overflow:auto; -webkit-overflow-scrolling:touch}
+.tableWrap{overflow:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:separate;border-spacing:0 8px;min-width:720px}
 th{font-size:12px;color:var(--muted);text-align:left;padding:0 8px;white-space:nowrap}
+
+/* >>> ESTO ERA EL "ACLARADO": lo oscurecí y lo dejé parejo <<< */
 td{
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
   padding:10px 8px;
   vertical-align:middle;
   white-space:nowrap;
@@ -148,7 +147,7 @@ td:last-child{border-radius:0 12px 12px 0}
 .inlineInput{
   width:100%;
   border:1px solid rgba(255,255,255,.16);
-  background:rgba(255,255,255,.07);
+  background:rgba(0,0,0,.18);
   border-radius:12px;
   padding:9px 10px;
   font-size:16px;
@@ -159,16 +158,12 @@ td:last-child{border-radius:0 12px 12px 0}
   box-shadow:0 0 0 3px rgba(122,162,255,.10);
 }
 
-.kpis{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kpi{
-  border:1px solid var(--stroke);
+  border:1px solid rgba(255,255,255,.12);
   border-radius:12px;
   padding:10px;
-  background:rgba(255,255,255,.02);
+  background:rgba(0,0,0,.18);
 }
 .kpi span{font-size:12px;color:var(--muted)}
 .kpi b{display:block;margin-top:4px;font-size:18px}
@@ -178,8 +173,8 @@ td:last-child{border-radius:0 12px 12px 0}
 @media (max-width:720px){.searchRow{grid-template-columns:1fr}}
 
 .listItem{
-  border:1px solid var(--stroke);
-  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.18);
   border-radius:14px;
   padding:10px;
   display:flex;
@@ -199,6 +194,27 @@ td:last-child{border-radius:0 12px 12px 0}
   background:rgba(122,162,255,.10);
   color:rgba(232,236,246,.90);
 }
+
+.toast{
+  position:fixed;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:18px;
+  padding:10px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(0,0,0,.55);
+  color:rgba(232,236,246,.92);
+  font-weight:900;
+  font-size:13px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  display:none;
+  z-index:9999;
+  max-width:92vw;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
 </style>
 </head>
 
@@ -208,15 +224,15 @@ td:last-child{border-radius:0 12px 12px 0}
   <div class="top">
     <div class="brandTitle">Recetas</div>
     <div class="topRight">
-      <button class="btn" id="btnExport">Exportar</button>
-      <button class="btn" id="btnImport">Importar</button>
+      <button class="btn" id="btnExport" type="button">Exportar</button>
+      <button class="btn" id="btnImport" type="button">Importar</button>
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab active" id="tabInsumos">Insumos</button>
-    <button class="tab" id="tabArmar">Armar receta</button>
-    <button class="tab" id="tabLista">Lista de recetas</button>
+    <button class="tab active" id="tabInsumos" type="button">Insumos</button>
+    <button class="tab" id="tabArmar" type="button">Armar receta</button>
+    <button class="tab" id="tabLista" type="button">Lista de recetas</button>
   </div>
 
   <!-- INSUMOS -->
@@ -245,7 +261,7 @@ td:last-child{border-radius:0 12px 12px 0}
       </div>
 
       <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" id="btnAddIng">Agregar</button>
+        <button class="btn primary" id="btnAddIng" type="button">Agregar</button>
       </div>
     </div>
 
@@ -305,7 +321,7 @@ td:last-child{border-radius:0 12px 12px 0}
       </div>
 
       <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" id="btnAddLine">Agregar</button>
+        <button class="btn primary" id="btnAddLine" type="button">Agregar</button>
       </div>
 
       <div class="hr"></div>
@@ -327,7 +343,6 @@ td:last-child{border-radius:0 12px 12px 0}
 
       <div class="hr"></div>
 
-      <!-- RINDE + UNIDAD AL LADO -->
       <div class="row" style="grid-template-columns:1fr 1fr">
         <div>
           <label>Rinde</label>
@@ -355,16 +370,13 @@ td:last-child{border-radius:0 12px 12px 0}
       </div>
 
       <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" id="btnSaveRecipe">Confirmar receta</button>
-        <button class="btn bad" id="btnDeleteRecipe" style="display:none">Borrar receta</button>
+        <button class="btn primary" id="btnSaveRecipe" type="button">Confirmar receta</button>
+        <button class="btn bad" id="btnDeleteRecipe" type="button" style="display:none">Borrar receta</button>
       </div>
 
-      <div class="hint" style="margin-top:10px">
-        Al confirmar, se limpia para cargar otra.
-      </div>
+      <div class="hint" style="margin-top:10px">Al confirmar, se limpia para cargar otra.</div>
     </div>
 
-    <!-- TOTALES 2x2 -->
     <div class="card">
       <div class="kpis">
         <div class="kpi">
@@ -414,12 +426,14 @@ td:last-child{border-radius:0 12px 12px 0}
 
 </div>
 
+<div id="toast" class="toast"></div>
+
 <script>
 /* =========================
    DATA
 ========================= */
 const LS_KEY = "sm_recetas_v1";
-const IVA_RATE = 0.21; // fijo, no se muestra
+const IVA_RATE = 0.21; // fijo (no se muestra)
 
 const defaultData = {
   categories: ["General","Salsas","Sushi","Rotisería","Pescadería"],
@@ -449,6 +463,14 @@ function save(){
 ========================= */
 const $ = (id)=>document.getElementById(id);
 
+function toast(msg){
+  const el = $("toast");
+  el.textContent = msg;
+  el.style.display = "block";
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>{ el.style.display = "none"; }, 1700);
+}
+
 function moneyToInt(str){
   const digits = String(str||"").replace(/\D/g,"");
   return digits ? parseInt(digits,10) : 0;
@@ -464,9 +486,10 @@ function setMoneyInputBehavior(input){
   });
 }
 function parseQty(str){
-  const s = String(str||"").trim().replace(/\s/g,"").replace(",",".");
+  const s = String(str??"").trim().replace(/\s/g,"").replace(",",".");
+  if(s==="") return NaN; // para detectar vacío
   const n = Number(s);
-  if(Number.isNaN(n)) return 0;
+  if(Number.isNaN(n)) return NaN;
   return n;
 }
 function formatQty(n){
@@ -495,16 +518,7 @@ function escapeHtml(str){
 /* =========================
    UI STATE
 ========================= */
-let draft = {
-  editingRecipeId: null,
-  name: "",
-  category: "General",
-  lines: [],
-  yield: 1,
-  yieldUnit: "u",
-  sell: 0,
-  asIngredient: false
-};
+let draft;
 
 function resetDraft(){
   draft = {
@@ -576,7 +590,6 @@ function renderIngsSelect(){
     sel.appendChild(o);
   });
 
-  // si no hay insumos, deshabilito el select y el botón agregar línea
   const has = data.ingredients.length>0;
   $("lineIng").disabled = !has;
   $("btnAddLine").disabled = !has;
@@ -604,7 +617,7 @@ function renderIngsTable(){
       </td>
       <td style="font-weight:900">$ ${intToMoney(conIva)}</td>
       <td style="text-align:right">
-        <button class="btn bad icon ingDel" data-id="${ing.id}" title="Borrar">➖</button>
+        <button class="btn bad icon ingDel" data-id="${ing.id}" title="Borrar" type="button">➖</button>
       </td>
     `;
     tb.appendChild(tr);
@@ -655,7 +668,7 @@ function renderLinesTable(){
       <td>${unit==="kg" ? "kg" : "unidad"}</td>
       <td style="font-weight:900">$ ${intToMoney(costLine)}</td>
       <td style="text-align:right">
-        <button class="btn bad icon lineDel" data-idx="${idx}" title="Quitar">➖</button>
+        <button class="btn bad icon lineDel" data-idx="${idx}" title="Quitar" type="button">➖</button>
       </td>
     `;
     tb.appendChild(tr);
@@ -749,7 +762,7 @@ function renderRecipesList(){
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <span class="badge">${r.yield ? (formatQty(r.yield) + " " + (r.yieldUnit==="kg"?"kg":"u")) : "—"}</span>
-        <button class="btn" style="padding:7px 10px;font-size:12px" data-edit="${r.id}">Abrir</button>
+        <button class="btn" style="padding:7px 10px;font-size:12px" data-edit="${r.id}" type="button">Abrir</button>
       </div>
     `;
     box.appendChild(item);
@@ -787,7 +800,7 @@ function renderAll(){
 ========================= */
 function addIngredient(){
   const name = $("ingName").value.trim();
-  if(!name) return;
+  if(!name){ toast("Poné nombre"); return; }
 
   const unit = $("ingUnit").value;
   const costNoIva = moneyToInt($("ingCost").value);
@@ -803,33 +816,46 @@ function addIngredient(){
   $("ingName").value = "";
   $("ingCost").value = "";
   save();
+  toast("Insumo agregado ✅");
 }
 
+/* >>> FIX: AGREGAR EN RECETA (iPhone-proof) <<< */
 function addLine(){
-  if(!data.ingredients.length) return;
+  try{
+    if(!data.ingredients.length){ toast("Cargá insumos primero"); return; }
 
-  const ingId = Number($("lineIng").value||0);
-  if(!ingId) return;
+    const rawId = $("lineIng").value;
+    const ingId = Number(rawId);
+    if(!rawId || !ingId){ toast("Elegí un insumo"); return; }
 
-  const qty = parseQty($("lineQty").value);
-  if(!(qty>0)) return;
+    // cantidad: si está vacío -> 1
+    let qty = parseQty($("lineQty").value);
+    if(Number.isNaN(qty)) qty = 1;
+    if(!(qty>0)){ toast("Cantidad inválida"); return; }
 
-  draft.lines.push({ ingId, qty });
+    draft.lines.push({ ingId, qty });
 
-  $("lineIng").value = "";
-  $("lineQty").value = "";
-  syncDraftToForm(false);
-  renderAll();
+    $("lineIng").value = "";
+    $("lineQty").value = "";
+
+    syncDraftToForm(false);
+    renderAll();
+    toast("Agregado ✅");
+  }catch(e){
+    alert("Error al agregar. Reintentá y avisame si sigue.");
+  }
 }
 
 function saveRecipe(){
   const name = $("recName").value.trim();
-  if(!name) return;
+  if(!name){ toast("Poné nombre de receta"); return; }
 
   const cat = $("recCategory").value || "General";
   ensureUniqueCategory(cat);
 
-  const y = parseQty($("recYield").value);
+  let y = parseQty($("recYield").value);
+  if(Number.isNaN(y) || !(y>0)) y = 1;
+
   const yUnit = $("recYieldUnit").value || "u";
   const sell = moneyToInt($("recSell").value);
   const asIng = $("recAsIngredient").checked;
@@ -839,7 +865,7 @@ function saveRecipe(){
     name,
     category: cat,
     lines: [...draft.lines],
-    yield: y>0 ? y : 1,
+    yield: y,
     yieldUnit: yUnit,
     sell: sell,
     asIngredient: !!asIng
@@ -858,6 +884,7 @@ function saveRecipe(){
   resetDraft();
   syncDraftToForm();
   save();
+  toast("Receta guardada ✅");
 }
 
 function deleteRecipe(){
@@ -868,6 +895,7 @@ function deleteRecipe(){
   resetDraft();
   syncDraftToForm();
   save();
+  toast("Receta borrada");
 }
 
 function openRecipeForEdit(id){
@@ -947,8 +975,9 @@ function importJSON(){
       try{
         const obj = JSON.parse(String(reader.result||""));
         data = { ...structuredClone(defaultData), ...obj };
+        resetDraft();
         save();
-        alert("Importado ✅");
+        toast("Importado ✅");
       }catch(e){
         alert("Ese archivo no sirve 😅");
       }
@@ -976,7 +1005,11 @@ $("btnDeleteRecipe").onclick = deleteRecipe;
 
 $("recName").addEventListener("input", ()=>{ draft.name = $("recName").value; });
 $("recCategory").addEventListener("change", ()=>{ draft.category = $("recCategory").value; });
-$("recYield").addEventListener("input", ()=>{ draft.yield = parseQty($("recYield").value); renderAll(); });
+$("recYield").addEventListener("input", ()=>{ 
+  const v = parseQty($("recYield").value);
+  draft.yield = Number.isNaN(v) ? 1 : v;
+  renderAll();
+});
 $("recYieldUnit").addEventListener("change", ()=>{ draft.yieldUnit = $("recYieldUnit").value; renderAll(); });
 $("recSell").addEventListener("input", ()=>{ draft.sell = moneyToInt($("recSell").value); renderAll(); });
 $("recAsIngredient").addEventListener("change", ()=>{ draft.asIngredient = $("recAsIngredient").checked; });
@@ -987,16 +1020,23 @@ $("filterCategory").addEventListener("change", renderRecipesList);
 $("btnExport").onclick = exportJSON;
 $("btnImport").onclick = importJSON;
 
+// Guardar rápido con Enter en cantidad
+$("lineQty").addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){
+    e.preventDefault();
+    addLine();
+  }
+});
+
 // Init
 resetDraft();
 renderAll();
 syncDraftToForm();
 
-/*
-Notas:
-- Cantidad acepta "0,5" o "0.5".
-- Si no hay insumos cargados, "Agregar" en receta queda deshabilitado.
-*/
+// Si algo explota, que no quede “silencioso”
+window.addEventListener("error", ()=> {
+  toast("Hubo un error. Volvé a intentar.");
+});
 </script>
 </body>
 </html>
