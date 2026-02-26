@@ -8,15 +8,17 @@
 <style>
 :root{
   --bg:#0e1013;
-  --panel: rgba(255,255,255,.035);
-  --stroke: rgba(255,255,255,.10);
+  --panel: rgba(0,0,0,.28);                 /* más parejo y oscuro */
+  --panel2: rgba(0,0,0,.22);                /* para inputs / celdas */
+  --stroke: rgba(255,255,255,.11);
+  --stroke2: rgba(255,255,255,.14);
   --text:#e8ecf6;
   --muted: rgba(232,236,246,.62);
   --brand:#7aa2ff;
   --bad:#ff5b6b;
   --good:#44d07b;
   --r:14px;
-  --shadow: 0 10px 26px rgba(0,0,0,.42);
+  --shadow: 0 10px 26px rgba(0,0,0,.45);
 }
 
 *{box-sizing:border-box}
@@ -24,12 +26,10 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background:
-    radial-gradient(900px 520px at 20% -10%, rgba(122,162,255,.09), transparent 60%),
-    radial-gradient(820px 480px at 95% 15%, rgba(68,208,123,.05), transparent 55%),
-    var(--bg);
+  background: var(--bg);                    /* sin franjas “claritas” */
   color:var(--text);
 }
+
 .wrap{max-width:1050px;margin:0 auto;padding:10px 12px 70px}
 
 .top{
@@ -37,7 +37,7 @@ body{
   border:1px solid var(--stroke);
   border-radius:999px;
   padding:10px 12px;
-  background:rgba(255,255,255,.03);
+  background:rgba(0,0,0,.22);
   box-shadow: var(--shadow);
 }
 .brandTitle{font-weight:900;letter-spacing:.2px}
@@ -45,7 +45,7 @@ body{
 
 .btn{
   border:1px solid var(--stroke);
-  background:rgba(255,255,255,.03);
+  background:rgba(0,0,0,.22);
   color:var(--text);
   padding:9px 12px;
   border-radius:999px;
@@ -56,14 +56,17 @@ body{
   transition: transform .08s, filter .08s, background .12s;
 }
 .btn.primary{
-  border-color:rgba(122,162,255,.55);
+  border-color:rgba(122,162,255,.60);
   background:rgba(122,162,255,.14);
 }
 .btn.bad{
   border-color:rgba(255,91,107,.55);
   background:rgba(255,91,107,.10);
 }
-.btn:active{transform:translateY(1px) scale(.99); filter:brightness(1.10)}
+.btn:active{
+  transform:translateY(1px) scale(.99);
+  filter:brightness(1.12);
+}
 .btn.icon{
   padding:7px 10px;
   font-size:14px;
@@ -71,20 +74,32 @@ body{
   min-width:38px;
 }
 
-.tabs{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+/* ====== TABS NUEVOS (segmented control) ====== */
+.tabs{
+  margin-top:10px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
 .tab{
   border:1px solid var(--stroke);
-  background:rgba(255,255,255,.03);
-  padding:9px 14px;
-  border-radius:999px;
+  background:rgba(0,0,0,.22);
+  padding:12px 10px;
+  border-radius:14px;
   font-size:13px;
   font-weight:900;
   cursor:pointer;
   user-select:none;
+  text-align:center;
+  transition: transform .08s, filter .08s, background .12s, border-color .12s;
 }
 .tab.active{
-  border-color:rgba(122,162,255,.55);
-  background:rgba(122,162,255,.14);
+  border-color:rgba(122,162,255,.70);
+  background:rgba(122,162,255,.16);
+}
+.tab:active{
+  transform:translateY(1px) scale(.99);
+  filter:brightness(1.12);
 }
 
 .card{
@@ -93,25 +108,26 @@ body{
   background:var(--panel);
   padding:12px;
   margin-top:10px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.28);
+  box-shadow: 0 8px 22px rgba(0,0,0,.30);
 }
 
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media (max-width:720px){ .row{grid-template-columns:1fr} }
 
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+
 input,select{
   width:100%;
   padding:11px 12px;
   border-radius:12px;
   border:1px solid var(--stroke);
-  background:rgba(0,0,0,.22);
+  background:var(--panel2);
   color:var(--text);
   font-size:16px;
   outline:none;
 }
 input:focus,select:focus{
-  border-color:rgba(122,162,255,.7);
+  border-color:rgba(122,162,255,.72);
   box-shadow:0 0 0 3px rgba(122,162,255,.10);
 }
 
@@ -123,20 +139,32 @@ input:focus,select:focus{
   content:"$";
   position:absolute;left:12px;top:50%;
   transform:translateY(-50%);
-  color:rgba(232,236,246,.90);
+  color:rgba(232,236,246,.92);
   font-weight:900;
   pointer-events:none;
 }
 .moneyField input{padding-left:34px;text-align:left}
 
-.tableWrap{overflow:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:separate;border-spacing:0 8px;min-width:720px}
-th{font-size:12px;color:var(--muted);text-align:left;padding:0 8px;white-space:nowrap}
+.tableWrap{
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  background:transparent;
+}
 
-/* >>> ESTO ERA EL "ACLARADO": lo oscurecí y lo dejé parejo <<< */
+/* tablas */
+table{width:100%;border-collapse:separate;border-spacing:0 10px;min-width:720px}
+th{
+  font-size:12px;
+  color:var(--muted);
+  text-align:left;
+  padding:0 8px;
+  white-space:nowrap;
+}
+
+/* sin franjas claras */
 td{
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
+  border:1px solid var(--stroke2);
+  background:rgba(0,0,0,.26);
   padding:10px 8px;
   vertical-align:middle;
   white-space:nowrap;
@@ -147,14 +175,14 @@ td:last-child{border-radius:0 12px 12px 0}
 .inlineInput{
   width:100%;
   border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.24);
   border-radius:12px;
   padding:9px 10px;
   font-size:16px;
   color:#fff;
 }
 .inlineInput:focus{
-  border-color:rgba(122,162,255,.7);
+  border-color:rgba(122,162,255,.72);
   box-shadow:0 0 0 3px rgba(122,162,255,.10);
 }
 
@@ -163,7 +191,7 @@ td:last-child{border-radius:0 12px 12px 0}
   border:1px solid rgba(255,255,255,.12);
   border-radius:12px;
   padding:10px;
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.26);
 }
 .kpi span{font-size:12px;color:var(--muted)}
 .kpi b{display:block;margin-top:4px;font-size:18px}
@@ -174,7 +202,7 @@ td:last-child{border-radius:0 12px 12px 0}
 
 .listItem{
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
+  background:rgba(0,0,0,.26);
   border-radius:14px;
   padding:10px;
   display:flex;
@@ -203,11 +231,11 @@ td:last-child{border-radius:0 12px 12px 0}
   padding:10px 12px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.16);
-  background:rgba(0,0,0,.55);
+  background:rgba(0,0,0,.70);
   color:rgba(232,236,246,.92);
   font-weight:900;
   font-size:13px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  box-shadow: 0 10px 24px rgba(0,0,0,.55);
   display:none;
   z-index:9999;
   max-width:92vw;
@@ -215,6 +243,9 @@ td:last-child{border-radius:0 12px 12px 0}
   overflow:hidden;
   text-overflow:ellipsis;
 }
+
+/* separación extra que pediste en “Armar receta” */
+.gapAfterAdd{ margin-top:14px; }
 </style>
 </head>
 
@@ -324,16 +355,18 @@ td:last-child{border-radius:0 12px 12px 0}
         <button class="btn primary" id="btnAddLine" type="button">Agregar</button>
       </div>
 
-      <div class="hr"></div>
+      <!-- separación extra -->
+      <div class="gapAfterAdd"></div>
 
       <div class="tableWrap">
         <table style="min-width:860px">
           <thead>
             <tr>
-              <th style="width:38%">Insumo</th>
-              <th style="width:16%">Cantidad</th>
-              <th style="width:16%">Unidad</th>
-              <th style="width:20%">Costo (Con IVA)</th>
+              <!-- columna Insumo más chica -->
+              <th style="width:32%">Insumo</th>
+              <th style="width:18%">Cantidad</th>
+              <th style="width:18%">Unidad</th>
+              <th style="width:22%">Costo (Con IVA)</th>
               <th style="width:10%"></th>
             </tr>
           </thead>
@@ -487,7 +520,7 @@ function setMoneyInputBehavior(input){
 }
 function parseQty(str){
   const s = String(str??"").trim().replace(/\s/g,"").replace(",",".");
-  if(s==="") return NaN; // para detectar vacío
+  if(s==="") return NaN;
   const n = Number(s);
   if(Number.isNaN(n)) return NaN;
   return n;
@@ -819,7 +852,6 @@ function addIngredient(){
   toast("Insumo agregado ✅");
 }
 
-/* >>> FIX: AGREGAR EN RECETA (iPhone-proof) <<< */
 function addLine(){
   try{
     if(!data.ingredients.length){ toast("Cargá insumos primero"); return; }
@@ -828,7 +860,6 @@ function addLine(){
     const ingId = Number(rawId);
     if(!rawId || !ingId){ toast("Elegí un insumo"); return; }
 
-    // cantidad: si está vacío -> 1
     let qty = parseQty($("lineQty").value);
     if(Number.isNaN(qty)) qty = 1;
     if(!(qty>0)){ toast("Cantidad inválida"); return; }
@@ -1005,7 +1036,7 @@ $("btnDeleteRecipe").onclick = deleteRecipe;
 
 $("recName").addEventListener("input", ()=>{ draft.name = $("recName").value; });
 $("recCategory").addEventListener("change", ()=>{ draft.category = $("recCategory").value; });
-$("recYield").addEventListener("input", ()=>{ 
+$("recYield").addEventListener("input", ()=>{
   const v = parseQty($("recYield").value);
   draft.yield = Number.isNaN(v) ? 1 : v;
   renderAll();
@@ -1020,7 +1051,6 @@ $("filterCategory").addEventListener("change", renderRecipesList);
 $("btnExport").onclick = exportJSON;
 $("btnImport").onclick = importJSON;
 
-// Guardar rápido con Enter en cantidad
 $("lineQty").addEventListener("keydown",(e)=>{
   if(e.key==="Enter"){
     e.preventDefault();
@@ -1033,7 +1063,6 @@ resetDraft();
 renderAll();
 syncDraftToForm();
 
-// Si algo explota, que no quede “silencioso”
 window.addEventListener("error", ()=> {
   toast("Hubo un error. Volvé a intentar.");
 });
