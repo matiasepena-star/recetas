@@ -8,8 +8,8 @@
 <style>
 :root{
   --bg:#0e1013;
-  --panel: rgba(0,0,0,.28);                 /* más parejo y oscuro */
-  --panel2: rgba(0,0,0,.22);                /* para inputs / celdas */
+  --panel: rgba(0,0,0,.28);
+  --panel2: rgba(0,0,0,.22);
   --stroke: rgba(255,255,255,.11);
   --stroke2: rgba(255,255,255,.14);
   --text:#e8ecf6;
@@ -26,7 +26,7 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-  background: var(--bg);                    /* sin franjas “claritas” */
+  background: var(--bg);
   color:var(--text);
 }
 
@@ -43,6 +43,7 @@ body{
 .brandTitle{font-weight:900;letter-spacing:.2px}
 .topRight{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 
+/* ====== BOTONES con feedback fuerte ====== */
 .btn{
   border:1px solid var(--stroke);
   background:rgba(0,0,0,.22);
@@ -53,19 +54,26 @@ body{
   font-size:13px;
   cursor:pointer;
   user-select:none;
-  transition: transform .08s, filter .08s, background .12s;
+  transition: transform .08s, filter .08s, background .12s, border-color .12s, box-shadow .12s;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 .btn.primary{
-  border-color:rgba(122,162,255,.60);
+  border-color:rgba(122,162,255,.62);
   background:rgba(122,162,255,.14);
+  box-shadow: 0 10px 20px rgba(0,0,0,.18);
 }
 .btn.bad{
   border-color:rgba(255,91,107,.55);
   background:rgba(255,91,107,.10);
 }
 .btn:active{
-  transform:translateY(1px) scale(.99);
-  filter:brightness(1.12);
+  transform:translateY(2px) scale(.98);
+  filter:brightness(1.15);
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+.btn:focus-visible{
+  outline:none;
+  box-shadow: 0 0 0 3px rgba(122,162,255,.14);
 }
 .btn.icon{
   padding:7px 10px;
@@ -74,7 +82,7 @@ body{
   min-width:38px;
 }
 
-/* ====== TABS NUEVOS (segmented control) ====== */
+/* ====== TABS (segmented) más notables ====== */
 .tabs{
   margin-top:10px;
   display:grid;
@@ -91,15 +99,18 @@ body{
   cursor:pointer;
   user-select:none;
   text-align:center;
-  transition: transform .08s, filter .08s, background .12s, border-color .12s;
+  transition: transform .08s, filter .08s, background .12s, border-color .12s, box-shadow .12s;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 .tab.active{
-  border-color:rgba(122,162,255,.70);
-  background:rgba(122,162,255,.16);
+  border-color:rgba(122,162,255,.80);
+  background:rgba(122,162,255,.18);
+  box-shadow: 0 14px 28px rgba(0,0,0,.24);
 }
 .tab:active{
-  transform:translateY(1px) scale(.99);
-  filter:brightness(1.12);
+  transform:translateY(2px) scale(.98);
+  filter:brightness(1.15);
+  box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 
 .card{
@@ -160,8 +171,6 @@ th{
   padding:0 8px;
   white-space:nowrap;
 }
-
-/* sin franjas claras */
 td{
   border:1px solid var(--stroke2);
   background:rgba(0,0,0,.26);
@@ -244,8 +253,14 @@ td:last-child{border-radius:0 12px 12px 0}
   text-overflow:ellipsis;
 }
 
-/* separación extra que pediste en “Armar receta” */
+/* separación extra entre carga y tabla en Armar receta */
 .gapAfterAdd{ margin-top:14px; }
+
+/* panel detalle en Lista */
+.detailCardTitle{
+  font-weight:900;
+  margin:0 0 6px 0;
+}
 </style>
 </head>
 
@@ -297,7 +312,14 @@ td:last-child{border-radius:0 12px 12px 0}
     </div>
 
     <div class="card">
-      <div class="hint" style="margin-bottom:8px">
+      <div class="row" style="grid-template-columns:1fr;gap:10px">
+        <div>
+          <label>Buscar insumo</label>
+          <input id="ingSearch" autocomplete="off" placeholder="Ej: salmón / papa / soja"/>
+        </div>
+      </div>
+
+      <div class="hint" style="margin:8px 0 8px">
         Editar costo: tocás el número → al salir del campo guarda.
       </div>
 
@@ -355,14 +377,12 @@ td:last-child{border-radius:0 12px 12px 0}
         <button class="btn primary" id="btnAddLine" type="button">Agregar</button>
       </div>
 
-      <!-- separación extra -->
       <div class="gapAfterAdd"></div>
 
       <div class="tableWrap">
         <table style="min-width:860px">
           <thead>
             <tr>
-              <!-- columna Insumo más chica -->
               <th style="width:32%">Insumo</th>
               <th style="width:18%">Cantidad</th>
               <th style="width:18%">Unidad</th>
@@ -455,6 +475,61 @@ td:last-child{border-radius:0 12px 12px 0}
 
     <div class="card" id="recipesList"></div>
 
+    <!-- Detalle abajo (como antes) -->
+    <div class="card" id="recipeDetail" style="display:none">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div>
+          <div class="detailCardTitle" id="detailTitle">—</div>
+          <div class="hint" id="detailMeta">—</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" id="btnDetailEdit" type="button">Editar</button>
+          <button class="btn bad" id="btnDetailClose" type="button">Cerrar</button>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="tableWrap">
+        <table style="min-width:860px">
+          <thead>
+            <tr>
+              <th style="width:40%">Insumo</th>
+              <th style="width:18%">Cantidad</th>
+              <th style="width:18%">Unidad</th>
+              <th style="width:24%">Costo (Con IVA)</th>
+            </tr>
+          </thead>
+          <tbody id="detailLines"></tbody>
+        </table>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="kpis">
+        <div class="kpi">
+          <span>Rinde</span>
+          <b id="dRinde">0</b>
+          <small id="dRindeUnit">—</small>
+        </div>
+        <div class="kpi">
+          <span>Costo total</span>
+          <b id="dTotal">$ 0</b>
+          <small>Con IVA</small>
+        </div>
+        <div class="kpi">
+          <span>Costo por rinde</span>
+          <b id="dPer">$ 0</b>
+          <small>total / rinde</small>
+        </div>
+        <div class="kpi">
+          <span>Margen</span>
+          <b id="dMargin">$ 0</b>
+          <small id="dPct">—</small>
+        </div>
+      </div>
+    </div>
+
   </div>
 
 </div>
@@ -466,7 +541,7 @@ td:last-child{border-radius:0 12px 12px 0}
    DATA
 ========================= */
 const LS_KEY = "sm_recetas_v1";
-const IVA_RATE = 0.21; // fijo (no se muestra)
+const IVA_RATE = 0.21;
 
 const defaultData = {
   categories: ["General","Salsas","Sushi","Rotisería","Pescadería"],
@@ -552,6 +627,8 @@ function escapeHtml(str){
    UI STATE
 ========================= */
 let draft;
+let ingSearchTerm = "";
+let detailRecipeId = null;
 
 function resetDraft(){
   draft = {
@@ -632,9 +709,14 @@ function renderIngsSelect(){
 function renderIngsTable(){
   const tb = $("ingTable");
   tb.innerHTML = "";
-  const sorted = [...data.ingredients].sort((a,b)=>a.name.localeCompare(b.name,"es"));
 
-  sorted.forEach(ing=>{
+  const sorted = [...data.ingredients].sort((a,b)=>a.name.localeCompare(b.name,"es"));
+  const filtered = sorted.filter(ing=>{
+    if(!ingSearchTerm) return true;
+    return ing.name.toLowerCase().includes(ingSearchTerm);
+  });
+
+  filtered.forEach(ing=>{
     const tr = document.createElement("tr");
     const conIva = costWithIva(ing.costNoIva);
 
@@ -781,6 +863,8 @@ function renderRecipesList(){
   box.innerHTML = "";
   if(list.length===0){
     box.innerHTML = `<div class="hint">No hay recetas con ese filtro.</div>`;
+    $("recipeDetail").style.display = "none";
+    detailRecipeId = null;
     return;
   }
 
@@ -795,12 +879,21 @@ function renderRecipesList(){
       </div>
       <div style="display:flex;gap:8px;align-items:center">
         <span class="badge">${r.yield ? (formatQty(r.yield) + " " + (r.yieldUnit==="kg"?"kg":"u")) : "—"}</span>
-        <button class="btn" style="padding:7px 10px;font-size:12px" data-edit="${r.id}" type="button">Abrir</button>
+        <button class="btn primary" style="padding:7px 10px;font-size:12px" data-view="${r.id}" type="button">Ver</button>
       </div>
     `;
     box.appendChild(item);
-    item.querySelector("[data-edit]").addEventListener("click", ()=>openRecipeForEdit(r.id));
+
+    item.querySelector("[data-view]").addEventListener("click", ()=>{
+      showRecipeDetail(r.id);
+      toast("Mostrando receta 👇");
+    });
   });
+
+  // si ya había una receta abierta, la re-renderizo
+  if(detailRecipeId){
+    showRecipeDetail(detailRecipeId, true);
+  }
 }
 
 function syncDraftToForm(updateLines=true){
@@ -826,6 +919,61 @@ function renderAll(){
   renderLinesTable();
   renderKpis();
   renderRecipesList();
+}
+
+/* ====== detalle en Lista ====== */
+function showRecipeDetail(id, silent=false){
+  const r = getRecipeById(id);
+  if(!r){
+    $("recipeDetail").style.display="none";
+    detailRecipeId = null;
+    return;
+  }
+  detailRecipeId = id;
+
+  const totals = computeRecipeTotals(r);
+
+  $("detailTitle").textContent = r.name;
+  $("detailMeta").innerHTML = `${escapeHtml(r.category || "General")} · rinde: <b>${formatQty(r.yield||1)} ${(r.yieldUnit==="kg"?"kg":"u")}</b> · venta: <b>$ ${intToMoney(r.sell||0)}</b>`;
+
+  // líneas
+  const tb = $("detailLines");
+  tb.innerHTML = "";
+  (r.lines||[]).forEach(ln=>{
+    const ing = getIngById(ln.ingId);
+    const name = ing ? ing.name : "(Insumo borrado)";
+    const unit = ing ? ing.unit : "—";
+    const qty = Number(ln.qty||0);
+    const costLine = ing ? Math.round(costWithIva(ing.costNoIva) * qty) : 0;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td style="font-weight:900">${escapeHtml(name)}</td>
+      <td>${formatQty(qty)}</td>
+      <td>${unit==="kg" ? "kg" : "unidad"}</td>
+      <td style="font-weight:900">$ ${intToMoney(costLine)}</td>
+    `;
+    tb.appendChild(tr);
+  });
+
+  $("dRinde").textContent = formatQty(r.yield||1);
+  $("dRindeUnit").textContent = (r.yieldUnit==="kg"?"kg":"unidad");
+  $("dTotal").textContent = "$ " + intToMoney(totals.total);
+  $("dPer").textContent = "$ " + intToMoney(totals.per);
+  $("dMargin").textContent = "$ " + intToMoney(totals.margin);
+  $("dPct").textContent = (totals.sell>0) ? `(${(totals.pct*100).toFixed(1)}%)` : "—";
+
+  $("btnDetailEdit").onclick = ()=>openRecipeForEdit(r.id);
+  $("btnDetailClose").onclick = ()=>{
+    $("recipeDetail").style.display="none";
+    detailRecipeId = null;
+  };
+
+  $("recipeDetail").style.display="";
+  if(!silent){
+    // baja suave a la vista del detalle
+    setTimeout(()=>$("recipeDetail").scrollIntoView({behavior:"smooth", block:"start"}), 60);
+  }
 }
 
 /* =========================
@@ -1007,6 +1155,8 @@ function importJSON(){
         const obj = JSON.parse(String(reader.result||""));
         data = { ...structuredClone(defaultData), ...obj };
         resetDraft();
+        detailRecipeId = null;
+        $("recipeDetail").style.display="none";
         save();
         toast("Importado ✅");
       }catch(e){
@@ -1058,14 +1208,21 @@ $("lineQty").addEventListener("keydown",(e)=>{
   }
 });
 
+// buscador insumos
+$("ingSearch").addEventListener("input", ()=>{
+  ingSearchTerm = ($("ingSearch").value || "").trim().toLowerCase();
+  renderIngsTable();
+});
+
+window.addEventListener("error", ()=> {
+  toast("Hubo un error. Volvé a intentar.");
+});
+
 // Init
 resetDraft();
 renderAll();
 syncDraftToForm();
 
-window.addEventListener("error", ()=> {
-  toast("Hubo un error. Volvé a intentar.");
-});
 </script>
 </body>
 </html>
